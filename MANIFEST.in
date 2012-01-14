@@ -1,0 +1,2 @@
+recursive-include registration/public *
+recursive-include registration/templates *.html
