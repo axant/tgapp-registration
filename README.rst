@@ -51,8 +51,7 @@ Available Hooks
 Registration exposes some hooks and options to configure its
 aspects. The most important option is:
 
-    * **registration.form** -> Full python path of the form class to use for Registration form.
-    by default *registration.lib.forms.RegistrationForm* is used.
+    * **registration.form** -> Full python path of the form class to use for Registration form. By default *registration.lib.forms.RegistrationForm* is used.
 
 The hooks that can be used with TurboGears2 *register_hook* are:
 
