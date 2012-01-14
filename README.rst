@@ -56,20 +56,13 @@ aspects. The most important option is:
 
 The hooks that can be used with TurboGears2 *register_hook* are:
 
-    * **registration.after_registration(registration, submitted_values)**
--> Runs after form submission. Can be used to store eventual data that the form
-sent and that the Registration model doesn't support.
+    * **registration.after_registration(registration, submitted_values)** -> Runs after form submission. Can be used to store eventual data that the form sent and that the Registration model doesn't support.
 
-    * **registration.on_complete(email_data)**
--> Runs after registration completion before sending activation email, can be used
-to change outgoing email.
+    * **registration.on_complete(email_data)** -> Runs after registration completion before sending activation email, can be used to change outgoing email.
 
-    * **registration.before_activation(registration, user)**
--> Runs at activation before creating the user and setting the registration as active
+    * **registration.before_activation(registration, user)** -> Runs at activation before creating the user and setting the registration as active
 
-    * **registration.before_activation(registration, user)**
--> Runs after creating user, can be used to call *redirect* to redirect to
-a different page at registration completion.
+    * **registration.before_activation(registration, user)** -> Runs after creating user, can be used to call *redirect* to redirect to a different page at registration completion.
 
 Exposed Templates
 --------------------
