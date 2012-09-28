@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-import sys, os
+import os
 
 try:
     from setuptools import setup, find_packages

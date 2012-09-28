@@ -1,7 +1,6 @@
 import re
-from tg import request
 from tg.i18n import ugettext as _
-from registration.model import DBSession, Registration
+from registration.model import DBSession
 from formencode import Invalid
 from tw.forms import validators
 
