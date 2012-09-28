@@ -2,11 +2,13 @@ import re
 from tg.i18n import ugettext as _
 from registration.model import DBSession
 from formencode import Invalid
-from tw.forms import validators
+from formencode import validators
 
 from tgext.pluggable import app_model
 
 class UniqueUserValidator(validators.UnicodeString):
+    outputEncoding=None
+
     def validate_python(self, value, state):
         super(UniqueUserValidator, self).validate_python(value, state)
         if re.match("^[a-zA-Z0-9_-]*[a-zA-Z_-][a-zA-Z0-9_-]*$", value):
