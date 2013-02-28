@@ -9,7 +9,7 @@ except ImportError:
     from setuptools import setup, find_packages
 
 install_requires=[
-    "TurboGears2 >= 2.1.4",
+    "TurboGears2 >= 2.2.0",
     "tgext.pluggable"
 ]
 
@@ -21,7 +21,7 @@ except IOError:
 
 setup(
     name='tgapp-registration',
-    version='0.3.1',
+    version='0.4.0',
     description='Pluggable registration application for TurboGears2 with hooks for fine customization',
     long_description=README,
     author='Alessandro Molina',

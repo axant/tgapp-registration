@@ -2,12 +2,9 @@
 """Main Controller"""
 
 from tg import TGController
-from routes import url_for
-from tg.decorators import Decoration
-from tg import expose, flash, require, url, lurl, request, redirect, validate, config
+from tg import expose, flash, require, url, lurl, request, redirect, validate, config, predicates
 from tg.i18n import ugettext as _, lazy_ugettext as l_
 
-from registration import model
 from registration.model import DBSession, Registration
 from registration.lib import get_form, send_email
 from datetime import datetime
@@ -20,6 +17,13 @@ class RootController(TGController):
     def index(self, *args, **kw):
         Registration.clear_expired()
         return dict(form=get_form(), value=kw, action=self.mount_point+'/submit')
+
+    @expose('registration.templates.admin')
+    @require(predicates.has_permission('registration-admin'))
+    def admin(self, **kw):
+        Registration.clear_expired()
+        pending_activation = DBSession.query(Registration).filter(Registration.activated==None)
+        return dict(registrations=pending_activation)
 
     @expose()
     @validate(get_form(), error_handler=index)
@@ -58,7 +62,7 @@ class RootController(TGController):
 Please click on this link to confirm your registration
 
 %s
-''' % (url_for(self.mount_point+'/activate', code=reg.code, email=email, qualified=True))}
+''' % reg.activation_link}
 
         hooks = config['hooks'].get('registration.on_complete', [])
         for func in hooks:
