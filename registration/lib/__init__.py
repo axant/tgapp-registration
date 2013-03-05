@@ -3,7 +3,7 @@ from email.header import Header
 from email.mime.text import MIMEText
 from email.utils import parseaddr, formataddr
 from smtplib import SMTP
-import sys, forms
+import sys
 from tg import config
 
 try:
@@ -15,8 +15,9 @@ def get_form():
     registration_form = config.get('registration.form_instance')
     if not registration_form:
         form_path = config.get('registration.form', 'registration.lib.forms.RegistrationForm')
-        root_module, path = form_path.split('.', 1)
-        form_class = reduce(getattr, path.split('.'), sys.modules[root_module])
+        module, form_name = form_path.rsplit('.', 1)
+        module = __import__(module, fromlist=form_name)
+        form_class = getattr(module, form_name)
         registration_form = config['registration.form_instance'] = form_class()
     return registration_form
 
