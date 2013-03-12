@@ -28,7 +28,7 @@ setup(
     author_email='alessandro.molina@axant.it',
     url='http://bitbucket.org/_amol_/tgapp-registration',
     keywords='turbogears2.application',
-    setup_requires=["PasteScript >= 1.7"],
+    setup_requires=[],
     paster_plugins=[],
     packages=find_packages(exclude=['ez_setup']),
     install_requires=install_requires,
