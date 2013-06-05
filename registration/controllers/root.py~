@@ -74,8 +74,8 @@ Please click on this link to confirm your registration
 
     @expose()
     @validate(dict(code=UnicodeString(not_empty=True)), error_handler=index)
-    def activate(self, code, **kw):
-        reg = Registration.get_inactive(code)
+    def activate(self, code, email, **kw):
+        reg = Registration.get_inactive(code, email)
         if not reg:
             flash(_('Registration not found or already activated'))
             return redirect(self.mount_point)
