@@ -53,5 +53,6 @@ class Registration(DeclarativeBase):
     @classmethod
     def get_inactive(cls, code):
         return DBSession.query(Registration).filter_by(activated=None)\
-                                            .filter_by(code=code)\
-                                            #.filter_by(email_address=email_address).first()
+                                            .filter_by(email_address = email)\
+                                            .filter_by(code=code).first()
+                                            

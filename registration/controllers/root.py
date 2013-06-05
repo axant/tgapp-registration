@@ -45,12 +45,12 @@ class RootController(TGController):
             func(new_reg, kw)
 
         return redirect(url(self.mount_point + '/complete',
-                            params=dict(code=new_reg.code)))
+                            params=dict(email= new_reg.email_address)))
 
     @expose('registration.templates.complete')
-    @validate(dict(code=UnicodeString(not_empty=True)), error_handler=index)
-    def complete(self, code, **kw):
-        reg = DBSession.query(Registration).filter_by(code=code).first()
+    @validate(dict(email=UnicodeString(not_empty=True)), error_handler=index)
+    def complete(self, email, **kw):
+        reg = DBSession.query(Registration).filter_by(email_address=email).first()
 
         if not reg:
             flash(_('Registration not found or already activated'))
@@ -70,7 +70,7 @@ Please click on this link to confirm your registration
 
         send_email(reg.email_address, email_data['sender'], email_data['subject'], email_data['body'])
 
-        return dict(email = reg.email_address, code=code, email_data=email_data)
+        return dict(email = email, email_data=email_data)
 
     @expose()
     @validate(dict(code=UnicodeString(not_empty=True)), error_handler=index)
