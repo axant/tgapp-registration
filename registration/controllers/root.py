@@ -2,12 +2,9 @@
 """Main Controller"""
 
 from tg import TGController
-from routes import url_for
-from tg.decorators import Decoration
-from tg import expose, flash, require, url, lurl, request, redirect, validate, config
+from tg import expose, flash, require, url, lurl, request, redirect, validate, config, predicates
 from tg.i18n import ugettext as _, lazy_ugettext as l_
 
-from registration import model
 from registration.model import DBSession, Registration
 from registration.lib import get_form, send_email
 from datetime import datetime
@@ -20,6 +17,13 @@ class RootController(TGController):
     def index(self, *args, **kw):
         Registration.clear_expired()
         return dict(form=get_form(), value=kw, action=self.mount_point+'/submit')
+
+    @expose('registration.templates.admin')
+    @require(predicates.has_permission('registration-admin'))
+    def admin(self, **kw):
+        Registration.clear_expired()
+        pending_activation = DBSession.query(Registration).filter(Registration.activated==None)
+        return dict(registrations=pending_activation)
 
     @expose()
     @validate(get_form(), error_handler=index)
@@ -41,13 +45,13 @@ class RootController(TGController):
             func(new_reg, kw)
 
         return redirect(url(self.mount_point + '/complete',
-                            params=dict(code=new_reg.code, email=new_reg.email_address)))
+                            params=dict(email= new_reg.email_address)))
 
     @expose('registration.templates.complete')
-    @validate(dict(code=UnicodeString(not_empty=True),
-                   email=UnicodeString(not_empty=True)), error_handler=index)
-    def complete(self, email, code):
-        reg = Registration.get_inactive(email, code)
+    @validate(dict(email=UnicodeString(not_empty=True)), error_handler=index)
+    def complete(self, email, **kw):
+        reg = DBSession.query(Registration).filter_by(email_address=email).first()
+
         if not reg:
             flash(_('Registration not found or already activated'))
             return redirect(self.mount_point)
@@ -58,21 +62,20 @@ class RootController(TGController):
 Please click on this link to confirm your registration
 
 %s
-''' % (url_for(self.mount_point+'/activate', code=code, email=email, qualified=True))}
+''' % reg.activation_link}
 
         hooks = config['hooks'].get('registration.on_complete', [])
         for func in hooks:
             func(email_data)
 
-        send_email(email, email_data['sender'], email_data['subject'], email_data['body'])
+        send_email(reg.email_address, email_data['sender'], email_data['subject'], email_data['body'])
 
-        return dict(email=email, email_data=email_data)
+        return dict(email = email, email_data=email_data)
 
     @expose()
-    @validate(dict(code=UnicodeString(not_empty=True),
-                   email=UnicodeString(not_empty=True)), error_handler=index)
-    def activate(self, email, code):
-        reg = Registration.get_inactive(email, code)
+    @validate(dict(code=UnicodeString(not_empty=True)), error_handler=index)
+    def activate(self, code, **kw):
+        reg = Registration.get_inactive(code)
         if not reg:
             flash(_('Registration not found or already activated'))
             return redirect(self.mount_point)

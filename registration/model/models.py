@@ -1,9 +1,13 @@
+from tg import url
+from tg.decorators import cached_property
+
 from sqlalchemy import Table, ForeignKey, Column
 from sqlalchemy.types import Unicode, Integer, DateTime
 from sqlalchemy.orm import backref, relation
 
 from registration.model import DeclarativeBase, DBSession
 from tgext.pluggable import app_model, primary_key
+from tgext.pluggable.utils import mount_point
 
 from datetime import datetime, timedelta
 import string, random, time, hashlib
@@ -21,6 +25,12 @@ class Registration(DeclarativeBase):
 
     user_id = Column(Integer, ForeignKey(primary_key(app_model.User)))
     user = relation(app_model.User, uselist=False, backref=backref('registration', uselist=False, cascade='all'))
+
+    @cached_property
+    def activation_link(self):
+        return url(mount_point('registration') + '/activate',
+                   params=dict(code=self.code),
+                   qualified=True)
 
     @classmethod
     def generate_code(cls, email):
@@ -41,7 +51,7 @@ class Registration(DeclarativeBase):
                                       .filter(Registration.time<datetime.now()-timedelta(7)).delete()
 
     @classmethod
-    def get_inactive(cls, email_address, code):
+    def get_inactive(cls, code):
         return DBSession.query(Registration).filter_by(activated=None)\
-                                            .filter_by(code=code)\
-                                            .filter_by(email_address=email_address).first()
+                                            .filter_by(code=code).first()
+                                            
