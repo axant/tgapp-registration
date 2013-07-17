@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 """Main Controller"""
+from _sqlite3 import IntegrityError
 
 from tg import TGController
 from tg import expose, flash, require, url, lurl, request, redirect, validate, config, predicates
@@ -85,11 +86,16 @@ Please click on this link to confirm your registration
                            email_address=reg.email_address,
                            password=reg.password)
 
+
         hooks = config['hooks'].get('registration.before_activation', [])
         for func in hooks:
             func(reg, u)
 
-        DBSession.add(u)
+        try:
+            DBSession.add(u)
+        except IntegrityError:
+            flash(_('Registration not found or already activated'))
+            return redirect(self.mount_point)
 
         reg.user = u
         reg.password = '******'

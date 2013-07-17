@@ -48,7 +48,7 @@ class Registration(DeclarativeBase):
     @classmethod
     def clear_expired(cls):
         expired = DBSession.query(cls).filter_by(activated=None)\
-                                      .filter(Registration.time<datetime.now()-timedelta(7)).delete()
+                                      .filter(Registration.time<datetime.now()-timedelta(days=2)).delete()
 
     @classmethod
     def get_inactive(cls, code):
