@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """Main Controller"""
-from _sqlite3 import IntegrityError
+from sqlalchemy.exc import IntegrityError
 
 from tg import TGController
 from tg import expose, flash, require, url, lurl, request, redirect, validate, config, predicates
@@ -91,10 +91,11 @@ Please click on this link to confirm your registration
         for func in hooks:
             func(reg, u)
 
+        DBSession.add(u)
         try:
-            DBSession.add(u)
+            DBSession.flush()
         except IntegrityError:
-            flash(_('Registration not found or already activated'))
+            flash(_('Username already activated'))
             return redirect(self.mount_point)
 
         reg.user = u
