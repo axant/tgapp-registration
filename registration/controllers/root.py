@@ -12,6 +12,7 @@ from datetime import datetime
 from tgext.pluggable import app_model
 
 from formencode.validators import UnicodeString
+import transaction
 
 class RootController(TGController):
     @expose('registration.templates.register')
@@ -95,6 +96,7 @@ Please click on this link to confirm your registration
         try:
             DBSession.flush()
         except IntegrityError:
+            transaction.doom()
             flash(_('Username already activated'))
             return redirect(self.mount_point)
 
