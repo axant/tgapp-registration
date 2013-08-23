@@ -21,7 +21,7 @@ except IOError:
 
 setup(
     name='tgapp-registration',
-    version='0.4.1',
+    version='0.5.0',
     description='Pluggable registration application for TurboGears2 with hooks for fine customization',
     long_description=README,
     author='Alessandro Molina',
@@ -39,7 +39,6 @@ setup(
     entry_points="""
     """,
     dependency_links=[
-        "http://www.turbogears.org/2.1/downloads/current/"
         ],
     zip_safe=False
 )
