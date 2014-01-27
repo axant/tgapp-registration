@@ -57,8 +57,11 @@ class RootController(TGController):
             flash(_('Registration not found or already activated'))
             return redirect(self.mount_point)
         registration_config = config.get('_pluggable_registration_config')
-        mail_body = registration_config.get('mail_body', _('Please click on this link to confirm your registration')) \
-                                       + '\n \n %s'
+
+        mail_body = registration_config.get('mail_body',
+                                            _('Please click on this link to confirm your registration'))
+        if '%s' not in mail_body:
+            mail_body = mail_body + '\n \n %s'
         email_data = {'sender':config['registration.email_sender'],
                       'subject':registration_config.get('mail_subject', _('Please confirm your registration')),
                       'body':mail_body % reg.activation_link}
