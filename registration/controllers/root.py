@@ -45,26 +45,27 @@ class RootController(TGController):
         hooks = config['hooks'].get('registration.after_registration', [])
         for func in hooks:
             func(new_reg, kw)
-
         return redirect(url(self.mount_point + '/complete',
-                            params=dict(email= new_reg.email_address)))
+                            params=dict(email=new_reg.email_address,
+                                        mail_subject=kw.get('mail_subject'),
+                                        mail_body=kw.get('mail_body'))))
 
     @expose('registration.templates.complete')
     @validate(dict(email=UnicodeString(not_empty=True)), error_handler=index)
-    def complete(self, email, **kw):
+    def complete(self, email, mail_subject=None, mail_body=None, **kw):
         reg = DBSession.query(Registration).filter_by(email_address=email).first()
 
         if not reg:
             flash(_('Registration not found or already activated'))
             return redirect(self.mount_point)
-
-        email_data = {'sender':config['registration.email_sender'],
-                      'subject':_('Please confirm your registration'),
-                      'body':'''
+        body = mail_body + '\n \n %s' if mail_body else '''
 Please click on this link to confirm your registration
 
 %s
-''' % reg.activation_link}
+'''
+        email_data = {'sender':config['registration.email_sender'],
+                      'subject':mail_subject or _('Please confirm your registration'),
+                      'body':body % reg.activation_link}
 
         hooks = config['hooks'].get('registration.on_complete', [])
         for func in hooks:
