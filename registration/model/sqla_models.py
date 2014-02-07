@@ -1,5 +1,8 @@
+from sqlite3 import IntegrityError
 from tg import url
 from tg.decorators import cached_property
+
+import transaction
 
 from sqlalchemy import Table, ForeignKey, Column
 from sqlalchemy.types import Unicode, Integer, DateTime
@@ -11,6 +14,8 @@ from tgext.pluggable.utils import mount_point
 
 from datetime import datetime, timedelta
 import string, random, time, hashlib
+from registration.model.dal_interface import IRegistration, DalIntegrityError
+
 
 class Registration(DeclarativeBase):
     __tablename__ = 'registration_registration'
@@ -55,4 +60,37 @@ class Registration(DeclarativeBase):
     def get_inactive(cls, code):
         return DBSession.query(Registration).filter_by(activated=None)\
                                             .filter_by(code=code).first()
-                                            
+
+
+class SqlaRegistration(IRegistration):
+
+    def new(self, **kw):
+        new_reg = Registration()
+        new_reg.email_address = kw['email_address']
+        new_reg.user_name = kw['user_name']
+        new_reg.password = kw['password']
+        new_reg.code = Registration.generate_code(kw['email_address'])
+        DBSession.add(new_reg)
+        DBSession.flush()
+        return new_reg
+
+    def clear_expired(self):
+        return Registration.clear_expired()
+
+    def out_of_uow_flush(self, entity=None):
+        DBSession.add(entity)
+        try:
+            DBSession.flush()
+        except IntegrityError:
+            transaction.doom()
+            raise DalIntegrityError
+        return entity
+
+    def by_email(self, email):
+        return DBSession.query(Registration).filter_by(email_address=email).first()
+
+    def get_inactive(self, code):
+        return Registration.get_inactive(code)
+
+    def pending_activation(self):
+        return DBSession.query(Registration).filter(Registration.activated==None)
