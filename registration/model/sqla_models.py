@@ -1,20 +1,23 @@
+import json
 from sqlite3 import IntegrityError
 from tg import url
 from tg.decorators import cached_property
 
-import transaction
+import transaction, string, random, time, hashlib
 
 from sqlalchemy import Table, ForeignKey, Column
+from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.types import Unicode, Integer, DateTime
-from sqlalchemy.orm import backref, relation
+from sqlalchemy.orm import backref, relation, deferred
 
-from registration.model import DeclarativeBase, DBSession
+from registration.model import DBSession
 from tgext.pluggable import app_model, primary_key
 from tgext.pluggable.utils import mount_point
 
 from datetime import datetime, timedelta
-import string, random, time, hashlib
 from registration.model.dal_interface import IRegistration, DalIntegrityError
+
+DeclarativeBase = declarative_base()
 
 
 class Registration(DeclarativeBase):
@@ -27,9 +30,20 @@ class Registration(DeclarativeBase):
     password = Column(Unicode(255), nullable=False)
     code = Column(Unicode(255), nullable=False)
     activated = Column(DateTime)
+    _extras = deferred(Column(Unicode(4095)))
 
     user_id = Column(Integer, ForeignKey(primary_key(app_model.User)))
     user = relation(app_model.User, uselist=False, backref=backref('registration', uselist=False, cascade='all'))
+
+    @property
+    def extras(self):
+        _extras = self._extras or '{}'
+        return json.loads(_extras)
+
+    @extras.setter
+    def extras(self, value):
+        self._extras = json.dumps(value)
+
 
     @cached_property
     def activation_link(self):

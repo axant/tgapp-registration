@@ -1,4 +1,5 @@
-from datetime import datetime, time, timedelta
+from datetime import datetime, timedelta
+import time
 import hashlib
 import random
 import string
@@ -26,8 +27,9 @@ class Registration(MappedClass):
     user_name = FieldProperty(s.String, required=True)
     email_address = FieldProperty(s.String, required=True, index=True)
     password = FieldProperty(s.String, required=True)
-    code = FieldProperty(s.String, required=True)
+    code = FieldProperty(s.String)
     activated = FieldProperty(s.DateTime)
+    extras = FieldProperty(s.Anything)
 
     user_id = FieldProperty(s.String, index=True)
 
@@ -67,10 +69,8 @@ class Registration(MappedClass):
 class MingRegistration(IRegistration):
 
     def new(self, **kw):
-        new_reg = Registration()
-        new_reg.email_address = kw['email_address']
-        new_reg.user_name = kw['user_name']
-        new_reg.password = kw['password']
+        new_reg = Registration(**kw)
+
         new_reg.code = Registration.generate_code(kw['email_address'])
         DBSession.flush()
         return new_reg
