@@ -1,5 +1,4 @@
 import json
-from sqlite3 import IntegrityError
 from tg import url
 from tg.decorators import cached_property
 
@@ -7,6 +6,7 @@ import transaction, string, random, time, hashlib
 
 from sqlalchemy import Table, ForeignKey, Column
 from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.exc import IntegrityError
 from sqlalchemy.types import Unicode, Integer, DateTime
 from sqlalchemy.orm import backref, relation, deferred
 
