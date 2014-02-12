@@ -8,8 +8,6 @@ from registration.model import patch_global_registration
 
 def plugme(app_config, options):
     app_config['_pluggable_registration_config'] = options
-    if app_config.get('use_ming'):
-        app_model.configure(app_config['ming_model'])
     hooks.register('after_config', register_dal_interface)
     milestones.environment_loaded.register(patch_global_registration)
     return dict(appid='registration', global_helpers=False)
