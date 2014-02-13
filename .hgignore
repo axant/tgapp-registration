@@ -1,0 +1,9 @@
+.pyc
+glob:*~
+.swp
+^build
+^dist
+.egg-info
+.idea
+.DS_Store
+
