@@ -1,12 +1,20 @@
 # -*- coding: utf-8 -*-
-from sqlalchemy.ext.declarative import declarative_base
+from tg import config
 from tgext.pluggable import PluggableSession
 
 DBSession = PluggableSession()
-DeclarativeBase = declarative_base()
+
+Registration = None
+
 
 def init_model(app_session):
     DBSession.configure(app_session)
 
-from models import Registration
 
+def patch_global_registration():
+    global Registration
+    use_sqlalchemy = config.get('use_sqlalchemy')
+    if use_sqlalchemy:
+        from .sqla_models import Registration
+    else:
+        from .ming_models import Registration

@@ -45,7 +45,7 @@ def _plain_send_mail(sender, recipient, subject, body):
     msg['To'] = formataddr((recipient_name, recipient_addr))
     msg['Subject'] = Header(unicode(subject), header_charset)
 
-    smtp = SMTP(config.get('registration.smtp_host', 'localhost'))
+    smtp = SMTP(config.get('registration.smtp_host', 'localhost'), int(config.get('registration.smtp_port', 0)))
     if config.get('registration.smtp_login'):
         try:
             smtp.starttls()

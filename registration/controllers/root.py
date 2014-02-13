@@ -1,30 +1,29 @@
 # -*- coding: utf-8 -*-
 """Main Controller"""
-from sqlalchemy.exc import IntegrityError
 
 from tg import TGController
-from tg import expose, flash, require, url, lurl, request, redirect, validate, config, predicates
-from tg.i18n import ugettext as _, lazy_ugettext as l_
+from tg import expose, flash, require, url, redirect, validate, config, predicates
+from tg.i18n import ugettext as _
 
-from registration.model import DBSession, Registration
 from registration.lib import get_form, send_email
 from datetime import datetime
 from tgext.pluggable import app_model
 
 from formencode.validators import UnicodeString
-import transaction
+from registration.model.dal_interface import DalIntegrityError
+
 
 class RootController(TGController):
     @expose('registration.templates.register')
     def index(self, *args, **kw):
-        Registration.clear_expired()
+        config['registration_dal'].clear_expired()
         return dict(form=get_form(), value=kw, action=self.mount_point+'/submit')
 
     @expose('registration.templates.admin')
     @require(predicates.has_permission('registration-admin'))
     def admin(self, **kw):
-        Registration.clear_expired()
-        pending_activation = DBSession.query(Registration).filter(Registration.activated==None)
+        config['registration_dal'].clear_expired()
+        pending_activation = config['registration_dal'].pending_activation()
         return dict(registrations=pending_activation)
 
     @expose()
@@ -34,13 +33,7 @@ class RootController(TGController):
         for func in hooks:
             func(kw)
 
-        new_reg = Registration()
-        new_reg.email_address = kw['email_address']
-        new_reg.user_name = kw['user_name']
-        new_reg.password = kw['password']
-        new_reg.code = Registration.generate_code(kw['email_address'])
-        DBSession.add(new_reg)
-        DBSession.flush()
+        new_reg = config['registration_dal'].new(**kw)
 
         hooks = config['hooks'].get('registration.after_registration', [])
         for func in hooks:
@@ -51,7 +44,7 @@ class RootController(TGController):
     @expose('registration.templates.complete')
     @validate(dict(email=UnicodeString(not_empty=True)), error_handler=index)
     def complete(self, email, **kw):
-        reg = DBSession.query(Registration).filter_by(email_address=email).first()
+        reg = config['registration_dal'].by_email(email)
 
         if not reg:
             flash(_('Registration not found or already activated'))
@@ -77,7 +70,7 @@ class RootController(TGController):
     @expose()
     @validate(dict(code=UnicodeString(not_empty=True)), error_handler=index)
     def activate(self, code, **kw):
-        reg = Registration.get_inactive(code)
+        reg = config['registration_dal'].get_inactive(code)
         if not reg:
             flash(_('Registration not found or already activated'))
             return redirect(self.mount_point)
@@ -92,11 +85,9 @@ class RootController(TGController):
         for func in hooks:
             func(reg, u)
 
-        DBSession.add(u)
         try:
-            DBSession.flush()
-        except IntegrityError:
-            transaction.doom()
+            u = config['registration_dal'].out_of_uow_flush(u)
+        except DalIntegrityError:
             flash(_('Username already activated'))
             return redirect(self.mount_point)
 

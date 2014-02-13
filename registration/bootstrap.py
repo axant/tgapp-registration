@@ -8,5 +8,9 @@ def bootstrap(command, conf, vars):
     print 'Bootstrapping registration...'
 
     p = app_model.Permission(permission_name='registration-admin', description='Permits to manage registrations')
-    model.DBSession.add(p)
+    try:
+        model.DBSession.add(p)
+    except AttributeError:
+        # mute ming complaints
+        pass
     model.DBSession.flush()

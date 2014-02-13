@@ -1,16 +1,24 @@
+import json
 from tg import url
 from tg.decorators import cached_property
 
-from sqlalchemy import Table, ForeignKey, Column
-from sqlalchemy.types import Unicode, Integer, DateTime
-from sqlalchemy.orm import backref, relation
+import transaction, string, random, time, hashlib
 
-from registration.model import DeclarativeBase, DBSession
+from sqlalchemy import Table, ForeignKey, Column
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.exc import IntegrityError
+from sqlalchemy.types import Unicode, Integer, DateTime
+from sqlalchemy.orm import backref, relation, deferred
+
+from registration.model import DBSession
 from tgext.pluggable import app_model, primary_key
 from tgext.pluggable.utils import mount_point
 
 from datetime import datetime, timedelta
-import string, random, time, hashlib
+from registration.model.dal_interface import IRegistration, DalIntegrityError
+
+DeclarativeBase = declarative_base()
+
 
 class Registration(DeclarativeBase):
     __tablename__ = 'registration_registration'
@@ -22,9 +30,20 @@ class Registration(DeclarativeBase):
     password = Column(Unicode(255), nullable=False)
     code = Column(Unicode(255), nullable=False)
     activated = Column(DateTime)
+    _extras = deferred(Column(Unicode(4095)))
 
     user_id = Column(Integer, ForeignKey(primary_key(app_model.User)))
     user = relation(app_model.User, uselist=False, backref=backref('registration', uselist=False, cascade='all'))
+
+    @property
+    def extras(self):
+        _extras = self._extras or '{}'
+        return json.loads(_extras)
+
+    @extras.setter
+    def extras(self, value):
+        self._extras = json.dumps(value)
+
 
     @cached_property
     def activation_link(self):
@@ -55,4 +74,37 @@ class Registration(DeclarativeBase):
     def get_inactive(cls, code):
         return DBSession.query(Registration).filter_by(activated=None)\
                                             .filter_by(code=code).first()
-                                            
+
+
+class SqlaRegistration(IRegistration):
+
+    def new(self, **kw):
+        new_reg = Registration()
+        new_reg.email_address = kw['email_address']
+        new_reg.user_name = kw['user_name']
+        new_reg.password = kw['password']
+        new_reg.code = Registration.generate_code(kw['email_address'])
+        DBSession.add(new_reg)
+        DBSession.flush()
+        return new_reg
+
+    def clear_expired(self):
+        return Registration.clear_expired()
+
+    def out_of_uow_flush(self, entity=None):
+        DBSession.add(entity)
+        try:
+            DBSession.flush()
+        except IntegrityError:
+            transaction.doom()
+            raise DalIntegrityError
+        return entity
+
+    def by_email(self, email):
+        return DBSession.query(Registration).filter_by(email_address=email).first()
+
+    def get_inactive(self, code):
+        return Registration.get_inactive(code)
+
+    def pending_activation(self):
+        return DBSession.query(Registration).filter(Registration.activated==None)
