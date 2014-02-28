@@ -45,34 +45,33 @@ class RootController(TGController):
     @validate(dict(email=UnicodeString(not_empty=True)), error_handler=index)
     def complete(self, email, **kw):
         reg = config['registration_dal'].by_email(email)
-
         if not reg:
             flash(_('Registration not found or already activated'))
             return redirect(self.mount_point)
-        registration_config = config.get('_pluggable_registration_config')
 
+        # Force resolution of lazy property
+        reg.activation_link
+
+        registration_config = config.get('_pluggable_registration_config')
         mail_body = registration_config.get('mail_body',
                                             _('Please click on this link to confirm your registration'))
-        if '%s' not in mail_body:
-            mail_body = mail_body + '\n \n %s'
+        if '%(activation_link)s' not in mail_body:
+            mail_body += '\n \n %(activation_link)s'
 
-        email_data = {'sender':config['registration.email_sender'],
-                      'subject':registration_config.get('mail_subject', _('Please confirm your registration')),
-                      'body':mail_body % reg.activation_link}
+        email_data = {'sender': config['registration.email_sender'],
+                      'subject': registration_config.get('mail_subject', _('Please confirm your registration')),
+                      'body': mail_body,
+                      'rich': registration_config.get('mail_rich', '')}
+
         hooks = config['hooks'].get('registration.on_complete', [])
         for func in hooks:
             func(email_data)
 
-        if registration_config.get('mail_rich'):
-            email_data['rich'] = registration_config.get('mail_rich') % vars(reg)
-            send_email(reg.email_address, email_data['sender'], email_data['subject'],
-                       email_data['body'], email_data['rich'])
-            return dict(email=email, email_data=email_data)
+        email_data['body'] = email_data['body'] % vars(reg)
+        email_data['rich'] = email_data['rich'] % vars(reg)
 
-
-        send_email(reg.email_address, email_data['sender'], email_data['subject'], email_data['body'])
-
-        return dict(email = email, email_data=email_data)
+        send_email(reg.email_address, **email_data)
+        return dict(email=email, email_data=email_data)
 
     @expose()
     @validate(dict(code=UnicodeString(not_empty=True)), error_handler=index)
