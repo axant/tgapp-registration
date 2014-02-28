@@ -55,11 +55,13 @@ def _plain_send_mail(sender, recipient, subject, body):
     smtp.sendmail(sender, recipient, msg.as_string())
     smtp.quit()
 
-def send_email(to_addr, from_addr, subject, body):
+def send_email(to_addr, from_addr, subject, body, rich=None):
     # Using turbomail if it exists, 'dumb' method otherwise
     if turbomail and config.get('mail.on'):
-        msg = turbomail.Message(from_addr, to_addr, subject)
+        msg = turbomail.Message(from_addr, to_addr, subject,  encoding='utf-8')
         msg.plain = body
+        if rich:
+            msg.rich = rich
         turbomail.enqueue(msg)
     else:
         _plain_send_mail(from_addr, to_addr, subject, body)

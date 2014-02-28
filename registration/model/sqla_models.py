@@ -30,20 +30,9 @@ class Registration(DeclarativeBase):
     password = Column(Unicode(255), nullable=False)
     code = Column(Unicode(255), nullable=False)
     activated = Column(DateTime)
-    _extras = deferred(Column(Unicode(4095)))
 
     user_id = Column(Integer, ForeignKey(primary_key(app_model.User)))
     user = relation(app_model.User, uselist=False, backref=backref('registration', uselist=False, cascade='all'))
-
-    @property
-    def extras(self):
-        _extras = self._extras or '{}'
-        return json.loads(_extras)
-
-    @extras.setter
-    def extras(self, value):
-        self._extras = json.dumps(value)
-
 
     @cached_property
     def activation_link(self):

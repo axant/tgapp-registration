@@ -55,13 +55,21 @@ class RootController(TGController):
                                             _('Please click on this link to confirm your registration'))
         if '%s' not in mail_body:
             mail_body = mail_body + '\n \n %s'
+
         email_data = {'sender':config['registration.email_sender'],
                       'subject':registration_config.get('mail_subject', _('Please confirm your registration')),
                       'body':mail_body % reg.activation_link}
-
         hooks = config['hooks'].get('registration.on_complete', [])
         for func in hooks:
             func(email_data)
+
+        if registration_config.get('mail_rich'):
+            body_info = (getattr(reg, data_element) for data_element in registration_config.get('mail_data', []))
+            body_info = tuple(body_info)
+            email_data['rich'] = registration_config.get('mail_rich') % body_info
+            send_email(reg.email_address, email_data['sender'], email_data['subject'], email_data['body'], email_data['rich'])
+            return dict(email = email, email_data=email_data)
+
 
         send_email(reg.email_address, email_data['sender'], email_data['subject'], email_data['body'])
 

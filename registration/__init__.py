@@ -9,7 +9,7 @@ from registration.model import patch_global_registration
 def plugme(app_config, options):
     app_config['_pluggable_registration_config'] = options
     hooks.register('after_config', register_dal_interface)
-    milestones.environment_loaded.register(patch_global_registration)
+    milestones.config_ready.register(patch_global_registration)
     return dict(appid='registration', global_helpers=False)
 
 
