@@ -29,7 +29,7 @@ Then at the *end of the file* call plug with registration::
 You will be able to access the registration process at
 *http://localhost:8080/registration*.
 
-Some options are available that can be set on .ini
+Some options are available that can be set on ``.ini``
 configuration file for your application.
 At least one option is required to make activation emails
 work:
@@ -45,14 +45,18 @@ options must be set to make activation email work:
 
     * **registration.smtp_passwd** -> Password for authentication on SMTP server
 
-Available Hooks
-----------------------
+Plugin Options
+---------------------
 
-Registration exposes some hooks and options to configure its
-aspects. The most important option is:
+When plugging ``tgapp-registration`` the following options
+can be passed to the plug call:
 
     * **registration.form** -> Full python path of the form class to use for Registration form. By default *registration.lib.forms.RegistrationForm* is used.
 
+Available Hooks
+----------------------
+
+Registration exposes some hooks to configure it's behavior,
 The hooks that can be used with TurboGears2 *register_hook* are:
 
     * **registration.before_registration(submitted_values)** -> Runs after form submission. Can be used to change the values submitted by the form before they are used

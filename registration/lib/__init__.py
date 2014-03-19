@@ -12,13 +12,16 @@ except ImportError:
     turbomail = None
 
 def get_form():
-    registration_form = config.get('registration.form_instance')
+    reg_config = config['_pluggable_registration_config']
+
+    registration_form = reg_config.get('form_instance')
     if not registration_form:
-        form_path = config.get('registration.form', 'registration.lib.forms.RegistrationForm')
+        form_path = reg_config.get('form', config.get('registration.form', 'registration.lib.forms.RegistrationForm'))
         module, form_name = form_path.rsplit('.', 1)
         module = __import__(module, fromlist=form_name)
         form_class = getattr(module, form_name)
-        registration_form = config['registration.form_instance'] = form_class()
+        registration_form = reg_config['form_instance'] = form_class()
+
     return registration_form
 
 def _plain_send_mail(sender, recipient, subject, body):
