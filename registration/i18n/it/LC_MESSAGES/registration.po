@@ -101,7 +101,7 @@ msgstr "Registrazione completata"
 
 #: registration/templates/complete.html:19
 msgid "Congratulations, your registration has been completed."
-msgstr "Congratulazioni, la tua registrazione è stata completata. PIPPO!"
+msgstr "Congratulazioni, la tua registrazione è stata completata."
 
 #: registration/templates/complete.html:20
 msgid "An email"
