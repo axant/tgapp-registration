@@ -1,0 +1,26 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:py="http://genshi.edgewall.org/"
+      xmlns:xi="http://www.w3.org/2001/XInclude">
+
+<xi:include href="master.html" />
+
+<head>
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type" py:if="False"/>
+    <title>Registration Completed</title>
+    <link rel="stylesheet" type="text/css" media="screen" href="${tg.url('/_pluggable/registration/css/style.css')}" />
+</head>
+
+<body>
+<div id="registration_complete">
+    <h1>Registration completed</h1>
+    <p>
+        <h4>Congratulations, your registration has been completed.</h4>
+        <strong>An email</strong> has been sent to <strong>${email}</strong> to activate the account,
+        please proceed by clicking on the provided link to be able
+        to login.
+    </p>
+</div>
+</body>
+</html>

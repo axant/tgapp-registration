@@ -1,0 +1,17 @@
+#registration_admin > table {
+    width: 100%;
+    margin-top: 20px;
+}
+
+#registration_admin > table th,
+#registration_admin > table td {
+    line-height: 20px;
+    padding: 8px;
+    border-top: 1px solid #dddddd;
+    text-align: left;
+}
+
+#registration_admin > table tr:nth-child(even) > td,
+#registration_admin > table tr:nth-child(even) > th {
+    background-color: #f9f9f9;
+}
