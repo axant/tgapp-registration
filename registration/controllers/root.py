@@ -3,7 +3,7 @@
 
 from tg import TGController
 from tg import expose, flash, require, url, redirect, validate, config, predicates
-from registration.lib.i18n import p_ as _, lp_ as l_
+from tg.i18n import ugettext as _
 
 from registration.lib import get_form, send_email
 from datetime import datetime

@@ -1,11 +1,9 @@
 import re
+from tg.i18n import ugettext as _
 from formencode import Invalid
 from formencode import validators
 
 from tgext.pluggable import app_model
-
-from registration.lib.i18n import p_ as _, lp_ as l_
-
 
 class UniqueUserValidator(validators.UnicodeString):
     outputEncoding=None
