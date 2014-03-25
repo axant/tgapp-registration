@@ -33,9 +33,14 @@ setup(
     packages=find_packages(exclude=['ez_setup']),
     install_requires=install_requires,
     include_package_data=True,
-    package_data={'tgapp.registration': ['i18n/*/LC_MESSAGES/*.mo',
+    package_data={'registration': ['i18n/*/LC_MESSAGES/*.mo',
                                  'templates/*/*',
                                  'public/*/*']},
+    message_extractors={'registration': [
+            ('**.py', 'python', None),
+            ('templates/**.html', 'genshi', None),
+            ('public/**', 'ignore', None)
+    ]},
     entry_points="""
     """,
     dependency_links=[
