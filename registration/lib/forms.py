@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 import tg
-from tg.i18n import lazy_ugettext as l_
+from registration.lib.i18n import p_ as _, lp_ as l_
 
 if tg.config.get('prefer_toscawidgets2', False):
     from tw2.forms import TableForm, TextField, PasswordField

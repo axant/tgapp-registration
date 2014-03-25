@@ -3,7 +3,7 @@
 
 from tg import TGController
 from tg import expose, flash, require, url, redirect, validate, config, predicates
-from tg.i18n import ugettext as _
+from registration.lib.i18n import p_ as _, lp_ as l_
 
 from registration.lib import get_form, send_email
 from datetime import datetime
@@ -46,7 +46,7 @@ class RootController(TGController):
     def complete(self, email, **kw):
         reg = config['registration_dal'].by_email(email)
         if not reg:
-            flash(_('Registration not found or already activated'))
+            #flash(_('Registration not found or already activated'))
             return redirect(self.mount_point)
 
         # Force resolution of lazy property
@@ -54,7 +54,7 @@ class RootController(TGController):
 
         registration_config = config.get('_pluggable_registration_config')
         mail_body = registration_config.get('mail_body',
-                                            _('Please click on this link to confirm your registration'))
+                                            ('Please click on this link to confirm your registration'))
         if '%(activation_link)s' not in mail_body:
             mail_body += '\n \n %(activation_link)s'
 
