@@ -13,7 +13,7 @@ from tgext.pluggable import app_model
 from tgext.pluggable.utils import mount_point
 from registration.model import DBSession
 from registration.model.dal_interface import IRegistration, DalIntegrityError
-from pymongo.errors import OperationFailure
+from pymongo.errors import DuplicateKeyError
 
 
 class Registration(MappedClass):
@@ -32,6 +32,12 @@ class Registration(MappedClass):
     extras = FieldProperty(s.Anything)
 
     user_id = FieldProperty(s.String, index=True)
+
+    @property
+    def dictified(self):
+        return dict(time=self.time, user_name=self.user_name, email_address=self.email_address,
+                    code=self.code, activated=self.activated, user_id=self.user_id,
+                    activation_link=self.activation_link)
 
     @cached_property
     def user(self):
@@ -81,7 +87,8 @@ class MingRegistration(IRegistration):
     def out_of_uow_flush(self, entity):
         try:
             DBSession.flush()
-        except OperationFailure:
+        except DuplicateKeyError:
+            DBSession.clear()
             raise DalIntegrityError
         return entity
 

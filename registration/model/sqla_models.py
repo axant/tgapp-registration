@@ -34,6 +34,10 @@ class Registration(DeclarativeBase):
     user_id = Column(Integer, ForeignKey(primary_key(app_model.User)))
     user = relation(app_model.User, uselist=False, backref=backref('registration', uselist=False, cascade='all'))
 
+    @property
+    def dictified(self):
+	return vars(self)
+
     @cached_property
     def activation_link(self):
         return url(mount_point('registration') + '/activate',

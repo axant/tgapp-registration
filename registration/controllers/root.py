@@ -65,10 +65,14 @@ class RootController(TGController):
 
         hooks = config['hooks'].get('registration.on_complete', [])
         for func in hooks:
-            func(email_data)
+            try:
+                func(reg, email_data)
+            except TypeError:
+                # Backward compatibility with hooks not accepting the registration
+                func(email_data)
 
-        email_data['body'] = email_data['body'] % vars(reg)
-        email_data['rich'] = email_data['rich'] % vars(reg)
+        email_data['body'] = email_data['body'] % reg.dictified
+        email_data['rich'] = email_data['rich'] % reg.dictified
 
         send_email(reg.email_address, **email_data)
         return dict(email=email, email_data=email_data)
@@ -78,7 +82,7 @@ class RootController(TGController):
     def activate(self, code, **kw):
         reg = config['registration_dal'].get_inactive(code)
         if not reg:
-            flash(_('Registration not found or already activated'))
+            flash(_('Registration not found or already activated'), 'error')
             return redirect(self.mount_point)
 
         u = app_model.User(user_name=reg.user_name,
@@ -94,8 +98,11 @@ class RootController(TGController):
         try:
             u = config['registration_dal'].out_of_uow_flush(u)
         except DalIntegrityError:
-            flash(_('Username already activated'))
+            print 'Integrity Error!'
+            flash(_('Username already activated'), 'error')
             return redirect(self.mount_point)
+
+        print 'Flushed', u.__ming__
 
         reg.user = u
         reg.password = '******'
