@@ -98,11 +98,8 @@ class RootController(TGController):
         try:
             u = config['registration_dal'].out_of_uow_flush(u)
         except DalIntegrityError:
-            print 'Integrity Error!'
             flash(_('Username already activated'), 'error')
             return redirect(self.mount_point)
-
-        print 'Flushed', u.__ming__
 
         reg.user = u
         reg.password = '******'
