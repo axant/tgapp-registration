@@ -36,7 +36,7 @@ class Registration(DeclarativeBase):
 
     @property
     def dictified(self):
-	return vars(self)
+        return vars(self)
 
     @cached_property
     def activation_link(self):
