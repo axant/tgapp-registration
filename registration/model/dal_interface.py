@@ -31,3 +31,11 @@ class IRegistration:
     @abstractmethod
     def out_of_uow_flush(self, entity):
         raise NotImplementedError
+
+    @abstractmethod
+    def get_user_by_email(self, email_address):
+        raise NotImplementedError
+
+    @abstractmethod
+    def get_user_by_user_name(self, user_name):
+        raise NotImplementedError

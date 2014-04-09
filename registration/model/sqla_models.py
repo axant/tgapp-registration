@@ -101,3 +101,9 @@ class SqlaRegistration(IRegistration):
 
     def pending_activation(self):
         return DBSession.query(Registration).filter(Registration.activated==None)
+
+    def get_user_by_email(self, email_address):
+        return app_model.DBSession.query(app_model.User).filter_by(email_address=email_address).first()
+
+    def get_user_by_user_name(self, user_name):
+        return app_model.DBSession.query(app_model.User).filter_by(user_name=user_name).first()
