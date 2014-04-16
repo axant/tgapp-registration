@@ -19,7 +19,8 @@ testpkgs=['WebTest >= 1.2.3',
           'ming',
           'sqlalchemy',
           'zope.sqlalchemy',
-          'repoze.who'
+          'repoze.who',
+          'tw2.forms'
 ]
 
 here = os.path.abspath(os.path.dirname(__file__))
