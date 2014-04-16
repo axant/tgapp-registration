@@ -1,6 +1,9 @@
 About TGApp-Registration
 -------------------------
 
+.. image:: https://drone.io/bitbucket.org/axant/tgapp-registration/status.png
+    :target: https://drone.io/bitbucket.org/axant/tgapp-registration
+
 Registration is a Pluggable registration application for TurboGears2.
 By default it will work with the quickstart TurboGears User model
 but provides a bunch of hooks that can be used to change the registration

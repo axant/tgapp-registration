@@ -37,7 +37,7 @@ setup(
     long_description=README,
     author='Alessandro Molina',
     author_email='alessandro.molina@axant.it',
-    url='http://bitbucket.org/_amol_/tgapp-registration',
+    url='http://bitbucket.org/axant/tgapp-registration',
     keywords='turbogears2.application',
     setup_requires=[],
     paster_plugins=[],
