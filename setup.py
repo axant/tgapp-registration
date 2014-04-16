@@ -13,6 +13,15 @@ install_requires=[
     "tgext.pluggable"
 ]
 
+testpkgs=['WebTest >= 1.2.3',
+          'nose',
+          'coverage',
+          'ming',
+          'sqlalchemy',
+          'zope.sqlalchemy',
+          'repoze.who'
+]
+
 here = os.path.abspath(os.path.dirname(__file__))
 try:
     README = open(os.path.join(here, 'README.rst')).read()
@@ -32,6 +41,12 @@ setup(
     paster_plugins=[],
     packages=find_packages(exclude=['ez_setup']),
     install_requires=install_requires,
+    test_suite='nose.collector',
+    tests_require=testpkgs,
+    extras_require={
+       # Used by Drone.io
+       'testing':testpkgs,
+    },
     include_package_data=True,
     package_data={'registration': ['i18n/*/LC_MESSAGES/*.mo',
                                  'templates/*/*',

@@ -2,7 +2,7 @@
 import tg
 from tg.i18n import lazy_ugettext as l_
 
-if tg.config.get('prefer_toscawidgets2', False):
+if tg.config.get('use_toscawidgets2', False):
     from tw2.forms import TableForm, TextField, PasswordField
     from tw2.core import Required
     from validators import UniqueEmailValidator, UniqueUserValidator
