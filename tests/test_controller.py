@@ -1,3 +1,4 @@
+import tg
 from tgext.pluggable import app_model
 from .base import configure_app, create_app, flush_db_changes
 from registration import lib, model
@@ -115,6 +116,29 @@ class RegistrationControllerTests(object):
 
         assert '<span id="email_address:error">Email address has already been taken</span>' in resp.text
         assert '<span id="user_name:error">Username already in use.</span>' in resp.text
+
+    def test_admin_is_reserved(self):
+        resp = self.app.get('/registration/admin', status=401)
+
+        cookie_header = resp.headers['Set-Cookie']
+        assert 'The%20user%20must%20have%20the%20%5C%22registration-admin%5C%22%20permission' in cookie_header
+
+    def test_on_complete_hook(self):
+        def on_complete(reg, email_data):
+            email_data['subject'] = 'CUSTOM SUBJECT: %s' % reg.activation_link
+
+        def backward_compatible_on_complete(email_data):
+            email_data['body'] = 'CUSTOM BODY'
+
+        tg.config['hooks']['registration.on_complete'] = [on_complete, backward_compatible_on_complete]
+        self.test_registration_submit()
+        sent_email = lib.SENT_EMAILS[0]
+
+        assert sent_email['body'] == 'CUSTOM BODY'
+        assert sent_email['subject'].startswith('CUSTOM SUBJECT')
+        assert sent_email['subject'].find('http://localhost') >= 0
+
+        del tg.config['hooks']['registration.on_complete']
 
 
 class TestRegistrationControllerSQLA(RegistrationControllerTests):

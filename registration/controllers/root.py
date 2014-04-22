@@ -11,7 +11,7 @@ from tgext.pluggable import app_model
 
 from formencode.validators import UnicodeString
 from registration.model.dal_interface import DalIntegrityError
-
+import warnings
 
 class RootController(TGController):
     @expose('registration.templates.register')
@@ -69,6 +69,8 @@ class RootController(TGController):
                 func(reg, email_data)
             except TypeError:
                 # Backward compatibility with hooks not accepting the registration
+                warnings.warn("registration.on_complete now takes two arguments: reg, email_data",
+                              DeprecationWarning, stacklevel=2)
                 func(email_data)
 
         email_data['body'] = email_data['body'] % reg.dictified

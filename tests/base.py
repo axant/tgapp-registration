@@ -11,6 +11,7 @@ from sqlalchemy import Integer, Column, Unicode, inspect
 from sqlalchemy.orm import sessionmaker, scoped_session
 from sqlalchemy.ext.declarative import declarative_base
 from zope.sqlalchemy import ZopeTransactionExtension
+from sqlalchemy import event
 
 import ming
 from ming import Session
@@ -124,7 +125,7 @@ class TestAuthMetadata(TGAuthMetadata):
 
     def get_permissions(self, identity, userid):
         if userid:
-            return ['turbopress']
+            return ['registration-admin']
         return []
 
 
