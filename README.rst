@@ -9,12 +9,15 @@ By default it will work with the quickstart TurboGears User model
 but provides a bunch of hooks that can be used to change the registration
 form and most of the registration aspects.
 
+Registration currently supports both ``SQLAlchemy`` and ``MongoDB``
+for database storage.
+
 Installing
 -------------------------------
 
 tgapp-registration can be installed both from pypi or from bitbucket::
 
-    easy_install tgapp-registration
+    pip install tgapp-registration
 
 should just work for most of the users
 
@@ -66,7 +69,7 @@ The hooks that can be used with TurboGears2 *register_hook* are:
 
     * **registration.after_registration(registration, submitted_values)** -> Runs after form submission. Can be used to store eventual data that the form sent and that the Registration model doesn't support.
 
-    * **registration.on_complete(email_data)** -> Runs after registration completion before sending activation email, can be used to change outgoing email.
+    * **registration.on_complete(registration, email_data)** -> Runs after registration completion before sending activation email, can be used to change outgoing email.
 
     * **registration.before_activation(registration, user)** -> Runs at activation before creating the user and setting the registration as active
 
