@@ -47,7 +47,7 @@ setup(
     tests_require=testpkgs,
     extras_require={
        # Used by Drone.io
-       'testing':testpkgs,
+       'testing': testpkgs,
     },
     include_package_data=True,
     package_data={'registration': ['i18n/*/LC_MESSAGES/*.mo',

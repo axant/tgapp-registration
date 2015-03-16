@@ -2,7 +2,7 @@
 """Main Controller"""
 
 from tg import TGController
-from tg import expose, flash, require, url, redirect, validate, config, predicates
+from tg import expose, flash, require, url, redirect, validate, config, predicates, hooks
 from tg.i18n import ugettext as _
 
 from registration.lib import get_form, send_email
@@ -12,6 +12,7 @@ from tgext.pluggable import app_model
 from formencode.validators import UnicodeString
 from registration.model.dal_interface import DalIntegrityError
 import warnings
+
 
 class RootController(TGController):
     @expose('registration.templates.register')
@@ -29,15 +30,9 @@ class RootController(TGController):
     @expose()
     @validate(get_form(), error_handler=index)
     def submit(self, *args, **kw):
-        hooks = config['hooks'].get('registration.before_registration', [])
-        for func in hooks:
-            func(kw)
-
+        hooks.notify('registration.before_registration', args=(kw,))
         new_reg = config['registration_dal'].new(**kw)
-
-        hooks = config['hooks'].get('registration.after_registration', [])
-        for func in hooks:
-            func(new_reg, kw)
+        hooks.notify('registration.after_registration', args=(new_reg, kw))
         return redirect(url(self.mount_point + '/complete',
                             params=dict(email=new_reg.email_address)))
 
@@ -63,15 +58,7 @@ class RootController(TGController):
                       'body': mail_body,
                       'rich': registration_config.get('mail_rich', '')}
 
-        hooks = config['hooks'].get('registration.on_complete', [])
-        for func in hooks:
-            try:
-                func(reg, email_data)
-            except TypeError:
-                # Backward compatibility with hooks not accepting the registration
-                warnings.warn("registration.on_complete now takes two arguments: reg, email_data",
-                              DeprecationWarning, stacklevel=2)
-                func(email_data)
+        hooks.notify('registration.on_complete', (reg, email_data))
 
         email_data['body'] = email_data['body'] % reg.dictified
         email_data['rich'] = email_data['rich'] % reg.dictified
@@ -93,9 +80,7 @@ class RootController(TGController):
                            password=reg.password)
 
 
-        hooks = config['hooks'].get('registration.before_activation', [])
-        for func in hooks:
-            func(reg, u)
+        hooks.notify('registration.before_activation', (reg, u))
 
         try:
             u = config['registration_dal'].out_of_uow_flush(u)
@@ -107,9 +92,7 @@ class RootController(TGController):
         reg.password = '******'
         reg.activated = datetime.now()
 
-        hooks = config['hooks'].get('registration.after_activation', [])
-        for func in hooks:
-            func(reg, u)
+        hooks.notify('registration.after_activation', (reg, u))
 
         flash(_('Account succesfully activated'))
         return redirect('/')

@@ -126,11 +126,9 @@ class RegistrationControllerTests(object):
     def test_on_complete_hook(self):
         def on_complete(reg, email_data):
             email_data['subject'] = 'CUSTOM SUBJECT: %s' % reg.activation_link
-
-        def backward_compatible_on_complete(email_data):
             email_data['body'] = 'CUSTOM BODY'
 
-        tg.config['hooks']['registration.on_complete'] = [on_complete, backward_compatible_on_complete]
+        tg.hooks.register('registration.on_complete', on_complete)
         self.test_registration_submit()
         sent_email = lib.SENT_EMAILS[0]
 
@@ -138,7 +136,10 @@ class RegistrationControllerTests(object):
         assert sent_email['subject'].startswith('CUSTOM SUBJECT')
         assert sent_email['subject'].find('http://localhost') >= 0
 
-        del tg.config['hooks']['registration.on_complete']
+        try:
+            tg.hooks.disconnect('registration.on_complete', on_complete)
+        except AttributeError:
+            del tg.config['hooks']['registration.on_complete']
 
 
 class TestRegistrationControllerSQLA(RegistrationControllerTests):

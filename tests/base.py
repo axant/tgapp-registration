@@ -140,7 +140,7 @@ def configure_app(using):
     app_cfg.package = FakeAppPackage()
     app_cfg.use_toscawidgets2 = True
     app_cfg.sa_auth.authmetadata = TestAuthMetadata()
-    app_cfg['beaker.session.secret'] = 'SECRET'
+    app_cfg['beaker.session.secret'] = app_cfg['session.secret'] = 'SECRET'
     app_cfg.auth_backend = 'ming'
 
     if using == 'sqlalchemy':
