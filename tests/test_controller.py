@@ -3,7 +3,7 @@ from tgext.pluggable import app_model
 from .base import configure_app, create_app, flush_db_changes
 from registration import lib, model
 import re
-
+from tgext.mailer import get_mailer
 find_urls = re.compile('http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+')
 
 
@@ -57,28 +57,60 @@ class RegistrationControllerTests(object):
         form['password'] = 'p'
         form['user_name'] = 'user1'
         resp = form.submit()
+
         resp = resp.follow()
+        ctx = resp.req.environ['paste.testing_variables']
 
         assert '<strong>An email</strong> has been sent to <strong>email@email.it</strong>' \
                ' to activate the account' in resp.text
-        assert len(lib.SENT_EMAILS) == 1
+
+        mailer = get_mailer(ctx['req'])
+        assert len(mailer.outbox) == 1
 
     def test_registration_submit_twice(self):
         self.test_registration_submit()
-        lib.SENT_EMAILS = []
         self.test_registration_submit()
 
     def test_registration_activate(self):
-        self.test_registration_submit()
+        resp = self.app.get('/registration')
+        form = resp.form
 
-        url = find_urls.findall(lib.SENT_EMAILS[0]['body'])[0]
+        form['email_address'] = 'email@email.it'
+        form['password_confirm'] = 'p'
+        form['password'] = 'p'
+        form['user_name'] = 'user1'
+        resp = form.submit()
+
+        resp = resp.follow()
+        ctx = resp.req.environ['paste.testing_variables']
+
+        assert '<strong>An email</strong> has been sent to <strong>email@email.it</strong>' \
+               ' to activate the account' in resp.text
+
+        mailer = get_mailer(ctx['req'])
+        url = find_urls.findall(mailer.outbox[0].body)[0]
         resp = self.app.get(url)
         assert 'Account%20succesfully%20activated' in resp.headers['Set-Cookie']
 
     def test_registration_activate_twice(self):
-        self.test_registration_submit()
+        resp = self.app.get('/registration')
+        form = resp.form
 
-        url = find_urls.findall(lib.SENT_EMAILS[0]['body'])[0]
+        form['email_address'] = 'email@email.it'
+        form['password_confirm'] = 'p'
+        form['password'] = 'p'
+        form['user_name'] = 'user1'
+        resp = form.submit()
+
+        resp = resp.follow()
+        ctx = resp.req.environ['paste.testing_variables']
+
+        assert '<strong>An email</strong> has been sent to <strong>email@email.it</strong>' \
+               ' to activate the account' in resp.text
+
+        mailer = get_mailer(ctx['req'])
+
+        url = find_urls.findall(mailer.outbox[0].body)[0]
         resp = self.app.get(url)
         assert 'Account%20succesfully%20activated' in resp.headers['Set-Cookie']
 
@@ -86,8 +118,24 @@ class RegistrationControllerTests(object):
         assert 'Registration%20not%20found%20or%20already%20activated' in resp.headers['Set-Cookie']
 
     def test_registration_duplicate_user(self):
-        self.test_registration_submit()
-        url = find_urls.findall(lib.SENT_EMAILS[0]['body'])[0]
+        resp = self.app.get('/registration')
+        form = resp.form
+
+        form['email_address'] = 'email@email.it'
+        form['password_confirm'] = 'p'
+        form['password'] = 'p'
+        form['user_name'] = 'user1'
+        resp = form.submit()
+
+        resp = resp.follow()
+        ctx = resp.req.environ['paste.testing_variables']
+
+        assert '<strong>An email</strong> has been sent to <strong>email@email.it</strong>' \
+               ' to activate the account' in resp.text
+
+        mailer = get_mailer(ctx['req'])
+
+        url = find_urls.findall(mailer.outbox[0].body)[0]
 
         # Create user in the mean while
         user = app_model.User(email_address='email@email.it',
@@ -129,12 +177,27 @@ class RegistrationControllerTests(object):
             email_data['body'] = 'CUSTOM BODY'
 
         tg.hooks.register('registration.on_complete', on_complete)
-        self.test_registration_submit()
-        sent_email = lib.SENT_EMAILS[0]
+        resp = self.app.get('/registration')
+        form = resp.form
 
-        assert sent_email['body'] == 'CUSTOM BODY'
-        assert sent_email['subject'].startswith('CUSTOM SUBJECT')
-        assert sent_email['subject'].find('http://localhost') >= 0
+        form['email_address'] = 'email@email.it'
+        form['password_confirm'] = 'p'
+        form['password'] = 'p'
+        form['user_name'] = 'user1'
+        resp = form.submit()
+
+        resp = resp.follow()
+        ctx = resp.req.environ['paste.testing_variables']
+
+        assert '<strong>An email</strong> has been sent to <strong>email@email.it</strong>' \
+               ' to activate the account' in resp.text
+
+        mailer = get_mailer(ctx['req'])
+
+        sent_email = mailer.outbox[0]
+        assert sent_email.body == 'CUSTOM BODY'
+        assert sent_email.subject.startswith('CUSTOM SUBJECT')
+        assert sent_email.subject.find('http://localhost') >= 0
 
         try:
             tg.hooks.disconnect('registration.on_complete', on_complete)

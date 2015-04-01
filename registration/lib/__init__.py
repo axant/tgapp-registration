@@ -5,11 +5,18 @@ from email.utils import parseaddr, formataddr
 from smtplib import SMTP
 import sys
 from tg import config
+from tg import request
 
 try:
     import turbomail
 except ImportError:
     turbomail = None
+
+try:
+    from tgext.mailer import Message as message, Attachment
+    from tgext.mailer import get_mailer
+except ImportError:
+    message = None
 
 def get_form():
     reg_config = config['_pluggable_registration_config']
@@ -59,12 +66,23 @@ def _plain_send_mail(sender, recipient, subject, body):
     smtp.quit()
 
 def send_email(to_addr, sender, subject, body, rich=None):
-    # Using turbomail if it exists, 'dumb' method otherwise
+    # Using turbomail if it exists, tgext.mailer pluggable otherwise
     if turbomail and config.get('mail.on'):
         msg = turbomail.Message(sender, to_addr, subject,  encoding='utf-8')
         msg.plain = body
         if rich:
             msg.rich = rich
         turbomail.enqueue(msg)
+    # Using tgext.mailer pluggable if it exists, 'dumb' method otherwise
+    elif message:
+        mailer = get_mailer(request)
+        message_to_send = message(
+            subject=subject,
+            sender=sender,
+            recipients=[to_addr],
+            body=body,
+            html=rich or None
+        )
+        mailer.send(message_to_send)
     else:
         _plain_send_mail(sender, to_addr, subject, body)

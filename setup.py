@@ -21,7 +21,8 @@ testpkgs=['WebTest >= 1.2.3',
           'zope.sqlalchemy',
           'repoze.who',
           'tw2.forms',
-          'genshi'
+          'genshi',
+          'tgext.mailer'
 ]
 
 here = os.path.abspath(os.path.dirname(__file__))

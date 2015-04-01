@@ -128,7 +128,6 @@ class TestAuthMetadata(TGAuthMetadata):
             return ['registration-admin']
         return []
 
-
 def configure_app(using):
     # Simulate starting configuration process from scratch
     milestones._reset_all()
@@ -142,6 +141,8 @@ def configure_app(using):
     app_cfg.sa_auth.authmetadata = TestAuthMetadata()
     app_cfg['beaker.session.secret'] = app_cfg['session.secret'] = 'SECRET'
     app_cfg.auth_backend = 'ming'
+    app_cfg['mail.debugmailer'] = 'dummy'
+
 
     if using == 'sqlalchemy':
         app_cfg.package.model = FakeSQLAModel()
@@ -161,15 +162,9 @@ def configure_app(using):
     # CUSTOM registration options
     app_cfg['registration.email_sender'] = 'reg@email.it'
 
-    def replaced_send_email(to_addr, sender, subject, body, rich=None):
-        SENT_EMAILS.append({'to_addr': to_addr,
-                            'sender': sender,
-                            'subject': subject,
-                            'body': body,
-                            'rich': rich})
+
 
     from registration.lib import send_email, get_form
-    send_email.func_code = replaced_send_email.func_code
 
     # Guarantee that the same form is used between multiple
     # configurations of TGApps. Otherwise the validated
@@ -178,6 +173,7 @@ def configure_app(using):
     if '_pluggable_registration_config' in config:
         plug_args['form_instance'] = get_form()
 
+    plug(app_cfg, 'tgext.mailer', plug_bootstrap=True, debugmailer='dummy')
     plug(app_cfg, 'registration', plug_bootstrap=False, **plug_args)
     return app_cfg
 
