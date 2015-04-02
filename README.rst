@@ -12,6 +12,8 @@ form and most of the registration aspects.
 Registration currently supports both ``SQLAlchemy`` and ``MongoDB``
 for database storage.
 
+Registration supports both ``Turbomail`` and ``tgext.mailer`` to send emails.
+
 Installing
 -------------------------------
 
@@ -20,6 +22,14 @@ tgapp-registration can be installed both from pypi or from bitbucket::
     pip install tgapp-registration
 
 should just work for most of the users
+
+If you want to use *Turbomail* as sender install it from pypi::
+
+    pip install turbomail
+
+If you want to use *tgext.mailer* as sender install it from pypi or from bitbucket::
+
+    pip install tgext.mailer
 
 Plugging Registration
 ----------------------------
@@ -32,6 +42,10 @@ Then at the *end of the file* call plug with registration::
 
     plug(base_config, 'registration')
 
+If you use *tgext.mailer* you need to plug it::
+
+    plug(base_config, 'tgext.mailer')
+
 You will be able to access the registration process at
 *http://localhost:8080/registration*.
 
@@ -42,7 +56,10 @@ work:
 
     * **registration.email_sender** -> Outgoing mails sender
 
-If you are not using *TurboMail* a few more configuration
+If you are using *tgext.mailer* you need to set up some configuration, check here for available options:
+*https://github.com/amol-/tgext.mailer*.
+
+If you are not using neither *TurboMail* or *tgext.mailer* a few more configuration
 options must be set to make activation email work:
 
     * **registration.smtp_host** -> SMTP server to use to send emails
