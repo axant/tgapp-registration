@@ -65,6 +65,7 @@ def _plain_send_mail(sender, recipient, subject, body):
     smtp.sendmail(sender, recipient, msg.as_string())
     smtp.quit()
 
+
 def send_email(to_addr, sender, subject, body, rich=None):
     # Using turbomail if it exists, tgext.mailer pluggable otherwise
     if turbomail and config.get('mail.on'):
@@ -83,6 +84,9 @@ def send_email(to_addr, sender, subject, body, rich=None):
             body=body,
             html=rich or None
         )
-        mailer.send(message_to_send)
+        if config.get('tm.enabled', False):
+            mailer.send(message_to_send)
+        else:
+            mailer.send_immediately(message_to_send)
     else:
         _plain_send_mail(sender, to_addr, subject, body)
