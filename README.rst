@@ -54,7 +54,7 @@ configuration file for your application.
 At least one option is required to make activation emails
 work:
 
-    * **registration.email_sender** -> Outgoing mails sender
+    * **registration.email_sender** -> Outgoing mails sender address (like ``no-repy@domain.com``)
 
 If you are using *tgext.mailer* you need to set up some configuration, check here for available options:
 *https://github.com/amol-/tgext.mailer*.
