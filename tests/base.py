@@ -133,8 +133,8 @@ def configure_app(using):
     milestones._reset_all()
 
     app_cfg = AppConfig(minimal=True)
-    app_cfg.renderers = ['genshi']
-    app_cfg.default_renderer = 'genshi'
+    app_cfg.renderers = ['kajiki']
+    app_cfg.default_renderer = 'kajiki'
     app_cfg.use_dotted_templatenames = True
     app_cfg.package = FakeAppPackage()
     app_cfg.use_toscawidgets2 = True

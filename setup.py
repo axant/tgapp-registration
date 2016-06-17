@@ -22,6 +22,7 @@ testpkgs=['WebTest >= 1.2.3',
           'repoze.who',
           'tw2.forms',
           'genshi',
+          'kajiki',
           'tgext.mailer'
 ]
 
@@ -57,6 +58,7 @@ setup(
     message_extractors={'registration': [
             ('**.py', 'python', None),
             ('templates/**.html', 'genshi', None),
+            ('templates/**.xhtml', 'kajiki', None),
             ('public/**', 'ignore', None)
     ]},
     entry_points="""

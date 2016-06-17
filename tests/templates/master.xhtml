@@ -1,14 +1,15 @@
-<html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:py="http://genshi.edgewall.org/"
-      py:strip="">
+<!DOCTYPE html>
 
-<head py:match="head" py:attrs="select('@*')">
+<html>
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <meta charset="${response.charset}" />
-  <title py:if="False">Your generic title goes here</title>
-  <meta py:replace="select('*')"/>
+  <title py:block="master_title">Your generic title goes here</title>
+
+  <py:block name="head"></py:block>
 </head>
 
-<body py:match="body" py:attrs="select('@*')">
+<body>
   <div class="container">
     <!-- Flash messages -->
     <py:with vars="flash=tg.flash_obj.render('flash', use_js=False)">
@@ -20,7 +21,7 @@
     </py:with>
 
     <!-- Main included content -->
-    <div py:replace="select('*|text()')"/>
+    <py:block name="body"></py:block>
   </div>
 </body>
 

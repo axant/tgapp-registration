@@ -15,12 +15,14 @@ import warnings
 
 
 class RootController(TGController):
-    @expose('registration.templates.register')
+    @expose('genshi:registration.templates.register')
+    @expose('kajiki:registration.templates.register')
     def index(self, *args, **kw):
         config['registration_dal'].clear_expired()
         return dict(form=get_form(), value=kw, action=self.mount_point+'/submit')
 
-    @expose('registration.templates.admin')
+    @expose('genshi:registration.templates.admin')
+    @expose('kajiki:registration.templates.admin')
     @require(predicates.has_permission('registration-admin'))
     def admin(self, **kw):
         config['registration_dal'].clear_expired()
@@ -36,7 +38,8 @@ class RootController(TGController):
         return redirect(url(self.mount_point + '/complete',
                             params=dict(email=new_reg.email_address)))
 
-    @expose('registration.templates.complete')
+    @expose('genshi:registration.templates.complete')
+    @expose('kajiki:registration.templates.complete')
     @validate(dict(email=UnicodeString(not_empty=True)), error_handler=index)
     def complete(self, email, **kw):
         reg = config['registration_dal'].by_email(email)

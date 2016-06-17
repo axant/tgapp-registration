@@ -28,8 +28,8 @@ class RegistrationAuthControllerTests(object):
         resp = self.app.get('/registration/admin')
         resp = resp.text
 
-        assert resp.count('<td>email@email.it</td>') == 3
-        assert resp.count('<td>user1</td>') == 3
+        assert resp.count('<td>email@email.it') == 3
+        assert resp.count('<td>user1') == 3
         assert resp.count('<a href="http://localhost/registration/activate?code=') == 3
 
 
