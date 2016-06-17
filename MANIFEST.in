@@ -1,4 +1,5 @@
 recursive-include registration/public *
 recursive-include registration/templates *.html
+recursive-include registration/templates *.xhtml
 global-exclude *.pyc
 

@@ -1,0 +1,19 @@
+<html py:extends="master.xhtml" py:strip="True">
+<head py:block="head" py:strip="True">
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type" py:if="False"/>
+    <title py:block="master_title">Registration Completed</title>
+    <link rel="stylesheet" type="text/css" media="screen" href="${tg.url('/_pluggable/registration/css/style.css')}" />
+</head>
+
+<body py:block="body" py:strip="True">
+<div id="registration_complete">
+    <h1>Registration completed</h1>
+    <p>
+        <h4>Congratulations, your registration has been completed.</h4>
+        <strong>An email</strong> has been sent to <strong>${email}</strong> to activate the account,
+        please proceed by clicking on the provided link to be able
+        to login.
+    </p>
+</div>
+</body>
+</html>
