@@ -17,7 +17,7 @@ testpkgs=['WebTest >= 1.2.3',
           'nose',
           'coverage',
           'ming',
-          'sqlalchemy',
+          'sqlalchemy < 1.0.99',  # TODO: Remove this when new zope.sqlalchemy is released.
           'zope.sqlalchemy',
           'repoze.who',
           'tw2.forms',
