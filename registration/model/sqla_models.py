@@ -51,7 +51,7 @@ class Registration(DeclarativeBase):
             base = ''.join(random.sample(code_space, 8))
             base += email
             base += str(time.time())
-            return hashlib.sha1(base).hexdigest()
+            return hashlib.sha1(base.encode('utf-8')).hexdigest()
         code = _generate_code_impl()
         while DBSession.query(cls).filter_by(code=code).first():
             code = _generate_code_impl()

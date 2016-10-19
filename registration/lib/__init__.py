@@ -32,6 +32,11 @@ def get_form():
     return registration_form
 
 def _plain_send_mail(sender, recipient, subject, body):
+    try:
+        unicode
+    except NameError:
+        raise RuntimeError('sending email without tgext.mailer is not supported on Python3+')
+
     header_charset = 'ISO-8859-1'
     for body_charset in 'US-ASCII', 'ISO-8859-1', 'UTF-8':
         try:

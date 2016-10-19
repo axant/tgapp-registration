@@ -5,7 +5,7 @@ from tg.i18n import lazy_ugettext as l_
 if tg.config.get('use_toscawidgets2', False):
     from tw2.forms import TableForm, TextField, PasswordField
     from tw2.core import Required
-    from validators import UniqueEmailValidator, UniqueUserValidator
+    from .validators import UniqueEmailValidator, UniqueUserValidator
     from formencode import validators
 
     class RegistrationForm(TableForm):
@@ -19,7 +19,7 @@ else:
     from tw.api import WidgetsList
     from tw.forms import TableForm, TextField, PasswordField
     from tw.forms import validators
-    from validators import UniqueEmailValidator, UniqueUserValidator
+    from .validators import UniqueEmailValidator, UniqueUserValidator
 
     class RegistrationForm(TableForm):
         class fields(WidgetsList):
