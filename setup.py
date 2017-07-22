@@ -33,7 +33,7 @@ except IOError:
 
 setup(
     name='tgapp-registration',
-    version='0.7.0',
+    version='0.8.0',
     description='Pluggable registration application for TurboGears2 with hooks for fine customization',
     long_description=README,
     author='Alessandro Molina',
@@ -47,7 +47,7 @@ setup(
     test_suite='nose.collector',
     tests_require=testpkgs,
     extras_require={
-       # Used by Drone.io
+       # Used by CI
        'testing': testpkgs,
     },
     include_package_data=True,
