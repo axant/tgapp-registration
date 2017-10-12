@@ -79,9 +79,15 @@ Available Hooks
 Registration exposes some hooks to configure it's behavior,
 The hooks that can be used with TurboGears2 *register_hook* are:
 
+    * **registration.before_index(url_args)** -> Runs before rendering the form. Can be used to insert preconditions to limit the registration for example just to invited users. You can set url_args['params'] to a dictionary that will be passed in the action of the form and you can be retrieved through before_registration_params and after_registration_params
+
     * **registration.before_registration(submitted_values)** -> Runs after form submission. Can be used to change the values submitted by the form before they are used
 
+    * **registration.before_registration_params(params, submitted_values)** -> The same as above but gives you request.params
+
     * **registration.after_registration(registration, submitted_values)** -> Runs after form submission. Can be used to store eventual data that the form sent and that the Registration model doesn't support.
+
+    * **registration.after_registration_params(registration, params, submitted_values)** -> The same as above but gives you request.params
 
     * **registration.on_complete(registration, email_data)** -> Runs after registration completion before sending activation email, can be used to change outgoing email.
 
