@@ -33,7 +33,7 @@ except IOError:
 
 setup(
     name='tgapp-registration',
-    version='0.8.0',
+    version='0.9.0',
     description='Pluggable registration application for TurboGears2 with hooks for fine customization',
     long_description=README,
     author='Alessandro Molina',
