@@ -2,7 +2,7 @@
 """Main Controller"""
 
 from tg import TGController
-from tg import expose, flash, require, url, redirect, validate, config, predicates, hooks, request
+from tg import expose, flash, require, url, redirect, validate, config, predicates, hooks
 from tg.i18n import ugettext as _
 
 from registration.lib import get_form, send_email
@@ -18,10 +18,9 @@ class RootController(TGController):
     @expose('genshi:registration.templates.register')
     @expose('kajiki:registration.templates.register')
     def index(self, *args, **kw):
-        hooks.notify('registration.before_index', args=(kw,))
+        hooks.notify('registration.before_registration_form', args=(kw,))
         config['registration_dal'].clear_expired()
-        return dict(form=get_form(), value=kw,
-                    action=url(self.mount_point+'/submit', params=kw.get('params')))
+        return dict(form=get_form(), value=kw, action=self.mount_point+'/submit')
 
     @expose('genshi:registration.templates.admin')
     @expose('kajiki:registration.templates.admin')
@@ -35,14 +34,10 @@ class RootController(TGController):
     @validate(get_form(), error_handler=index)
     def submit(self, *args, **kw):
         hooks.notify('registration.before_registration', args=(kw,))
-        hooks.notify('registration.before_registration_params',
-                     args=(dict(request.params), kw))
 
         new_reg = config['registration_dal'].new(**kw)
 
         hooks.notify('registration.after_registration', args=(new_reg, kw))
-        hooks.notify('registration.after_registration_params',
-                     args=(new_reg, dict(request.params), kw))
         return redirect(url(self.mount_point + '/complete',
                             params=dict(email=new_reg.email_address)))
 

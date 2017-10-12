@@ -3,12 +3,13 @@ import tg
 from tg.i18n import lazy_ugettext as l_
 
 if tg.config.get('use_toscawidgets2', False):
-    from tw2.forms import TableForm, TextField, PasswordField
+    from tw2.forms import TableForm, TextField, PasswordField, HiddenField
     from tw2.core import Required
     from .validators import UniqueEmailValidator, UniqueUserValidator
     from formencode import validators
 
     class RegistrationForm(TableForm):
+        params = HiddenField()
         user_name = TextField(label=l_('User Name'), validator=UniqueUserValidator(not_empty=True))
         email_address = TextField(label=l_('Email'), validator=UniqueEmailValidator(not_empty=True))
         password = PasswordField(label=l_('Password'), validator=Required)
