@@ -5,7 +5,7 @@ import random
 import string
 from bson import ObjectId
 from ming import schema as s
-from ming.odm import FieldProperty
+from ming.odm import FieldProperty, ForeignIdProperty
 from ming.odm.declarative import MappedClass
 from tg import url
 from tg.caching import cached_property
@@ -31,7 +31,7 @@ class Registration(MappedClass):
     activated = FieldProperty(s.DateTime)
     extras = FieldProperty(s.Anything)
 
-    user_id = FieldProperty(s.String, index=True)
+    user_id = ForeignIdProperty(app_model.User)
 
     @property
     def dictified(self):
