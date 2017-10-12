@@ -9,6 +9,7 @@ data/*
 # Packages
 *.egg
 *.egg-info
+.eggs/
 dist
 build
 
@@ -18,3 +19,11 @@ pip-log.txt
 # Unit test / coverage reports
 .coverage
 .tox
+
+# virtualenvs
+env/
+venv/
+venv2/
+venv3/
+
+.idea/
