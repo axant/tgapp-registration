@@ -10,7 +10,7 @@ except ImportError:
 
 install_requires=[
     "TurboGears2 >= 2.3.1",
-    "tgext.pluggable"
+    "tgext.pluggable >= 0.7.1"
 ]
 
 testpkgs=['WebTest >= 1.2.3',
