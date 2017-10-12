@@ -7,7 +7,7 @@ from tg.i18n import ugettext as _
 
 from registration.lib import get_form, send_email
 from datetime import datetime
-from tgext.pluggable import app_model
+from tgext.pluggable import app_model, instance_primary_key
 
 from formencode.validators import UnicodeString
 from registration.model.dal_interface import DalIntegrityError
@@ -91,7 +91,7 @@ class RootController(TGController):
             flash(_('Username already activated'), 'error')
             return redirect(self.mount_point)
 
-        reg.user = u
+        reg.user_id = instance_primary_key(u)
         reg.password = '******'
         reg.activated = datetime.now()
 
