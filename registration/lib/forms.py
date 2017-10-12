@@ -9,7 +9,10 @@ if tg.config.get('use_toscawidgets2', False):
     from formencode import validators
 
     class RegistrationForm(TableForm):
-        params = HiddenField()
+        # set additional extra info here to bring them across the registration process
+        # you might want to serialize the extra info in json or something similar
+        extra = HiddenField()
+
         user_name = TextField(label=l_('User Name'), validator=UniqueUserValidator(not_empty=True))
         email_address = TextField(label=l_('Email'), validator=UniqueEmailValidator(not_empty=True))
         password = PasswordField(label=l_('Password'), validator=Required)
