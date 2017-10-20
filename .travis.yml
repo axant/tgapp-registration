@@ -10,7 +10,11 @@ python:
 
 install:
   - "pip install nose"
+  - "pip install coveralls"
   - "pip install --no-use-wheel -e .[testing]"
 
-script: 
+script:
   - "nosetests -v"
+
+after_success:
+  - coveralls
