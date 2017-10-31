@@ -1,3 +1,5 @@
+.. image:: https://badge.fury.io/py/tgapp-registration.svg
+    :target: https://badge.fury.io/py/tgapp-registration
 .. image:: https://travis-ci.org/axant/tgapp-registration.svg?branch=master
     :target: https://travis-ci.org/axant/tgapp-registration
 .. image:: https://coveralls.io/repos/github/axant/tgapp-registration/badge.svg?branch=master
