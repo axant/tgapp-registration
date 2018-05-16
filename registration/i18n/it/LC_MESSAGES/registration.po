@@ -8,110 +8,120 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tgapp-registration 0.6.0\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2014-03-25 12:27+0100\n"
+"POT-Creation-Date: 2018-05-16 11:41+0200\n"
 "PO-Revision-Date: 2014-03-25 14:02+0100\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: it\n"
 "Language-Team: it <LL@li.org>\n"
 "Plural-Forms: nplurals=2; plural=(n != 1)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Generated-By: Babel 1.3\n"
+"Generated-By: Babel 2.5.3\n"
 
-#: registration/controllers/root.py:49 registration/controllers/root.py:81
-msgid "Registration not found or already activated"
-msgstr "La tua richiesta di registrazione non è stata trovata o è già stata attivata"
-
-#: registration/controllers/root.py:57
+#: registration/controllers/root.py:58
 msgid "Please click on this link to confirm your registration"
-msgstr "Click su questo link per confermare la tua registrazione"
+msgstr "Clicca su questo link per confermare la tua registrazione"
 
-#: registration/controllers/root.py:62
+#: registration/controllers/root.py:65
 msgid "Please confirm your registration"
-msgstr "Perfavore conferma la tua registrazione"
+msgstr "Per favore conferma la tua registrazione"
 
-#: registration/controllers/root.py:97
+#: registration/controllers/root.py:83
+msgid "Registration not found or already activated"
+msgstr ""
+"La tua richiesta di registrazione non è stata trovata o è già stata "
+"attivata"
+
+#: registration/controllers/root.py:96
 msgid "Username already activated"
 msgstr "L'utente è già stato attivato"
 
-#: registration/controllers/root.py:108
+#: registration/controllers/root.py:105
 msgid "Account succesfully activated"
 msgstr "Account attivato con successo"
 
-#: registration/lib/forms.py:12 registration/lib/forms.py:26
+#: registration/lib/forms.py:16 registration/lib/forms.py:30
 msgid "User Name"
 msgstr "Nome Utente"
 
-#: registration/lib/forms.py:13 registration/lib/forms.py:27
-#: registration/templates/admin.html:21
+#: registration/lib/forms.py:17 registration/lib/forms.py:31
+#: registration/templates/admin.html:21 registration/templates/admin.xhtml:13
 msgid "Email"
 msgstr "Email"
 
-#: registration/lib/forms.py:14 registration/lib/forms.py:28
+#: registration/lib/forms.py:18 registration/lib/forms.py:32
 msgid "Password"
 msgstr "Password"
 
-#: registration/lib/forms.py:15 registration/lib/forms.py:29
+#: registration/lib/forms.py:19 registration/lib/forms.py:33
 msgid "Confirm Password"
 msgstr "Conferma Password"
 
-#: registration/lib/validators.py:16
+#: registration/lib/validators.py:17
 msgid "Username already in use."
 msgstr "Il nome utente è già in uso."
 
-#: registration/lib/validators.py:18
+#: registration/lib/validators.py:19
 msgid "Invalid username"
 msgstr "Nome utente non valido"
 
-#: registration/lib/validators.py:26
+#: registration/lib/validators.py:28
 msgid "Email address has already been taken"
 msgstr "Indirizzo email già in uso"
 
-#: registration/lib/validators.py:28
+#: registration/lib/validators.py:30
 msgid "Invalid email"
 msgstr "Indirizzo email non valido"
 
 #: registration/templates/admin.html:11 registration/templates/admin.html:17
+#: registration/templates/admin.xhtml:4 registration/templates/admin.xhtml:9
 msgid "Registration Admin"
 msgstr "Admin Registrazione"
 
-#: registration/templates/admin.html:20
+#: registration/templates/admin.html:20 registration/templates/admin.xhtml:12
 msgid "Date"
 msgstr "Data"
 
-#: registration/templates/admin.html:22
+#: registration/templates/admin.html:22 registration/templates/admin.xhtml:14
 msgid "Username"
 msgstr "Nome Utente"
 
-#: registration/templates/admin.html:23
+#: registration/templates/admin.html:23 registration/templates/admin.xhtml:15
 msgid "Activation Link"
 msgstr "Link di Attivazione"
 
-#: registration/templates/admin.html:29
+#: registration/templates/admin.html:29 registration/templates/admin.xhtml:21
 msgid "activate"
 msgstr "attiva"
 
 #: registration/templates/complete.html:11
+#: registration/templates/complete.xhtml:4
 msgid "Registration Completed"
 msgstr "Registrazione Completata"
 
 #: registration/templates/complete.html:17
+#: registration/templates/complete.xhtml:10
 msgid "Registration completed"
 msgstr "Registrazione completata"
 
 #: registration/templates/complete.html:19
+#: registration/templates/complete.xhtml:12
 msgid "Congratulations, your registration has been completed."
 msgstr "Congratulazioni, la tua registrazione è stata completata."
 
 #: registration/templates/complete.html:20
+#: registration/templates/complete.xhtml:13
 msgid "An email"
 msgstr "Una email"
 
 #: registration/templates/complete.html:20
+#: registration/templates/complete.xhtml:13
 msgid "has been sent to"
 msgstr "è stata inviata a"
 
 #: registration/templates/complete.html:20
+#: registration/templates/complete.xhtml:13
 msgid ""
 "to activate the account,\n"
 "        please proceed by clicking on the provided link to be able\n"
@@ -122,6 +132,6 @@ msgstr ""
 "        effettuare il login."
 
 #: registration/templates/register.html:11
+#: registration/templates/register.xhtml:4
 msgid "Register New User"
 msgstr "Registra un Nuovo Utente"
-
