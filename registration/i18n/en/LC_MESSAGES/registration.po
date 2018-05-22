@@ -1,0 +1,133 @@
+# English translations for tgapp-registration.
+# Copyright (C) 2018 ORGANIZATION
+# This file is distributed under the same license as the tgapp-registration
+# project.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2018.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: tgapp-registration 0.9.0\n"
+"Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
+"POT-Creation-Date: 2018-05-16 11:41+0200\n"
+"PO-Revision-Date: 2018-05-22 14:12+0200\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: en\n"
+"Language-Team: en <LL@li.org>\n"
+"Plural-Forms: nplurals=2; plural=(n != 1)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.5.3\n"
+
+#: registration/controllers/root.py:58
+msgid "Please click on this link to confirm your registration"
+msgstr ""
+
+#: registration/controllers/root.py:65
+msgid "Please confirm your registration"
+msgstr ""
+
+#: registration/controllers/root.py:83
+msgid "Registration not found or already activated"
+msgstr ""
+
+#: registration/controllers/root.py:96
+msgid "Username already activated"
+msgstr ""
+
+#: registration/controllers/root.py:105
+msgid "Account succesfully activated"
+msgstr ""
+
+#: registration/lib/forms.py:16 registration/lib/forms.py:30
+msgid "User Name"
+msgstr ""
+
+#: registration/lib/forms.py:17 registration/lib/forms.py:31
+#: registration/templates/admin.html:21 registration/templates/admin.xhtml:13
+msgid "Email"
+msgstr ""
+
+#: registration/lib/forms.py:18 registration/lib/forms.py:32
+msgid "Password"
+msgstr ""
+
+#: registration/lib/forms.py:19 registration/lib/forms.py:33
+msgid "Confirm Password"
+msgstr ""
+
+#: registration/lib/validators.py:17
+msgid "Username already in use."
+msgstr ""
+
+#: registration/lib/validators.py:19
+msgid "Invalid username"
+msgstr ""
+
+#: registration/lib/validators.py:28
+msgid "Email address has already been taken"
+msgstr ""
+
+#: registration/lib/validators.py:30
+msgid "Invalid email"
+msgstr ""
+
+#: registration/templates/admin.html:11 registration/templates/admin.html:17
+#: registration/templates/admin.xhtml:4 registration/templates/admin.xhtml:9
+msgid "Registration Admin"
+msgstr ""
+
+#: registration/templates/admin.html:20 registration/templates/admin.xhtml:12
+msgid "Date"
+msgstr ""
+
+#: registration/templates/admin.html:22 registration/templates/admin.xhtml:14
+msgid "Username"
+msgstr ""
+
+#: registration/templates/admin.html:23 registration/templates/admin.xhtml:15
+msgid "Activation Link"
+msgstr ""
+
+#: registration/templates/admin.html:29 registration/templates/admin.xhtml:21
+msgid "activate"
+msgstr ""
+
+#: registration/templates/complete.html:11
+#: registration/templates/complete.xhtml:4
+msgid "Registration Completed"
+msgstr ""
+
+#: registration/templates/complete.html:17
+#: registration/templates/complete.xhtml:10
+msgid "Registration completed"
+msgstr ""
+
+#: registration/templates/complete.html:19
+#: registration/templates/complete.xhtml:12
+msgid "Congratulations, your registration has been completed."
+msgstr ""
+
+#: registration/templates/complete.html:20
+#: registration/templates/complete.xhtml:13
+msgid "An email"
+msgstr ""
+
+#: registration/templates/complete.html:20
+#: registration/templates/complete.xhtml:13
+msgid "has been sent to"
+msgstr ""
+
+#: registration/templates/complete.html:20
+#: registration/templates/complete.xhtml:13
+msgid ""
+"to activate the account,\n"
+"        please proceed by clicking on the provided link to be able\n"
+"        to login."
+msgstr ""
+
+#: registration/templates/register.html:11
+#: registration/templates/register.xhtml:4
+msgid "Register New User"
+msgstr ""
+
