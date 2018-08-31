@@ -6,12 +6,14 @@ python:
   - "3.4"
   - "3.5"
   - "3.6"
+  - "3.7"
   - "pypy"
 
 install:
   - "pip install nose"
   - "pip install coveralls"
-  - "pip install --no-use-wheel -e .[testing]"
+  - "pip install --upgrade pip"
+  - "pip install -e .[testing]"
 
 script:
   - "nosetests -v"
