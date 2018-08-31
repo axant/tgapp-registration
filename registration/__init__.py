@@ -14,8 +14,17 @@ def plugme(app_config, options):
         warnings.warn("mail_* options are now deprecated, use registration.on_complete hook(reg, email_data) "
                       "to customize the outgoing email.", DeprecationWarning, stacklevel=2)
 
-    app_config['_pluggable_registration_config'] = options
-    hooks.register('after_config', register_dal_interface)
+    try:
+        # TG2.3
+        app_config['_pluggable_registration_config'] = options
+        hooks.register('after_config', register_dal_interface)
+    except TypeError:
+        # TG2.4
+        app_config.update_blueprint({
+            '_pluggable_registration_config': options
+        })
+        hooks.register('after_wsgi_middlewares', register_dal_interface)
+    
     milestones.config_ready.register(patch_global_registration)
     return dict(appid='registration', global_helpers=False)
 
