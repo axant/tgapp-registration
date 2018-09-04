@@ -128,6 +128,15 @@ class TestAuthMetadata(TGAuthMetadata):
             return ['registration-admin']
         return []
 
+
+# Guarantee that the same form is used between multiple
+# instances of TGApps. Otherwise the validated
+# form would be different from the displayed one.
+# As the Controller form for @validate is created only once at startup.
+from registration.lib import forms
+registration_form = forms.RegistrationForm()
+
+
 def configure_app(using):
     # Simulate starting configuration process from scratch
     milestones._reset_all()
@@ -138,17 +147,18 @@ def configure_app(using):
     app_cfg.use_dotted_templatenames = True
     app_cfg.package = FakeAppPackage()
     app_cfg.use_toscawidgets2 = True
+    app_cfg['tw2.enabled'] = True
     app_cfg.sa_auth.authmetadata = TestAuthMetadata()
     app_cfg['beaker.session.secret'] = app_cfg['session.secret'] = 'SECRET'
     app_cfg.auth_backend = 'ming'
     app_cfg['mail.debugmailer'] = 'dummy'
-
 
     if using == 'sqlalchemy':
         app_cfg.package.model = FakeSQLAModel()
         app_cfg.use_sqlalchemy = True
         app_cfg['sqlalchemy.url'] = 'sqlite://'
         app_cfg.use_transaction_manager = True
+        app_cfg['tm.enabled'] = True
     elif using == 'ming':
         app_cfg.package.model = FakeMingModel()
         app_cfg.use_ming = True
@@ -160,21 +170,12 @@ def configure_app(using):
     app_cfg.DBSession = app_cfg.package.model.DBSession
 
     # CUSTOM registration options
-    app_cfg['registration.email_sender'] = 'reg@email.it'
-
-
-
-    from registration.lib import send_email, get_form
-
-    # Guarantee that the same form is used between multiple
-    # configurations of TGApps. Otherwise the validated
-    # form would be different from the displayed one.
-    plug_args = {}
-    if '_pluggable_registration_config' in config:
-        plug_args['form_instance'] = get_form()
+    app_cfg['registration.email_sender'] = 'reg@email.it' 
 
     plug(app_cfg, 'tgext.mailer', plug_bootstrap=True, debugmailer='dummy')
-    plug(app_cfg, 'registration', plug_bootstrap=False, **plug_args)
+    plug(app_cfg, 'registration', plug_bootstrap=False, 
+         form_instance=registration_form)
+    
     return app_cfg
 
 

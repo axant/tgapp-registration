@@ -46,7 +46,7 @@ class RegistrationControllerTests(object):
         form['email_address'] = ''
         resp = form.submit()
 
-        assert '<span id="email_address:error">Please enter a value</span>' in resp.text
+        assert '<span id="email_address:error">Please enter a value</span>' in resp.text, resp.text
 
     def test_registration_submit(self):
         resp = self.app.get('/registration')
