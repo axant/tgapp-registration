@@ -5,7 +5,7 @@ from tg import TGController
 from tg import expose, flash, require, url, redirect, validate, config, predicates, hooks
 from tg.i18n import ugettext as _
 
-from registration.lib import get_form, send_email
+from registration.lib import get_form, send_email, complete_registration
 from datetime import datetime
 from tgext.pluggable import app_model, instance_primary_key
 
@@ -48,31 +48,7 @@ class RootController(TGController):
         if not reg:
             # flash(_('Registration not found or already activated'))
             return redirect(self.mount_point)
-
-        # Force resolution of lazy property
-        reg.activation_link
-
-        registration_config = config.get('_pluggable_registration_config')
-        mail_body = registration_config.get(
-            'mail_body',
-            _('Please click on this link to confirm your registration')
-        )
-        if '%(activation_link)s' not in mail_body:
-            mail_body += '\n \n %(activation_link)s'
-
-        email_data = {'sender': config['registration.email_sender'],
-                      'subject': registration_config.get(
-                          'mail_subject', _('Please confirm your registration')
-                      ),
-                      'body': mail_body,
-                      'rich': registration_config.get('mail_rich', '')}
-
-        hooks.notify('registration.on_complete', (reg, email_data))
-
-        email_data['body'] = email_data['body'] % reg.dictified
-        email_data['rich'] = email_data['rich'] % reg.dictified
-
-        send_email(reg.email_address, **email_data)
+        email_data = complete_registration(reg)
         return dict(email=email, email_data=email_data)
 
     @expose()
