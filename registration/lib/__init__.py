@@ -5,8 +5,7 @@ from email.utils import parseaddr, formataddr
 from smtplib import SMTP
 import sys
 
-from tg import config, hooks, request
-from tg.i18n import ugettext as _
+from tg import config, request
 
 
 try:
@@ -98,29 +97,3 @@ def send_email(to_addr, sender, subject, body, rich=None):
     else:
         _plain_send_mail(sender, to_addr, subject, body)
 
-
-def complete_registration(registration):
-    # Force resolution of lazy property
-    registration.activation_link
-    registration_config = config.get('_pluggable_registration_config')
-    mail_body = registration_config.get(
-        'mail_body',
-        _('Please click on this link to confirm your registration')
-    )
-    if '%(activation_link)s' not in mail_body:
-        mail_body += '\n \n %(activation_link)s'
-
-    email_data = {'sender': config['registration.email_sender'],
-                  'subject': registration_config.get(
-                      'mail_subject', _('Please confirm your registration')
-                  ),
-                  'body': mail_body,
-                  'rich': registration_config.get('mail_rich', '')}
-
-    hooks.notify('registration.on_complete', (registration, email_data))
-
-    email_data['body'] = email_data['body'] % registration.dictified
-    email_data['rich'] = email_data['rich'] % registration.dictified
-
-    send_email(registration.email_address, **email_data)
-    return email_data

@@ -22,7 +22,8 @@ testpkgs=['WebTest >= 1.2.3',
           'repoze.who',
           'tw2.forms',
           'kajiki',
-          'tgext.mailer'
+          'tgext.mailer',
+          'formencode',
 ]
 
 here = os.path.abspath(os.path.dirname(__file__))
@@ -33,7 +34,7 @@ except IOError:
 
 setup(
     name='tgapp-registration',
-    version='0.9.4',
+    version='0.9.5',
     description='Pluggable registration application for TurboGears2 with hooks for fine customization',
     long_description=README,
     author='Alessandro Molina',
