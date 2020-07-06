@@ -8,7 +8,7 @@ log = logging.getLogger('tgapp-registration')
 
 def bootstrap(command, conf, vars):
     log.info('Bootstrapping registration...')
-
+    # on sqlalchemy, we should put here (and keep updated) the latest migration version
     p = app_model.Permission(permission_name='registration-admin', description='Permits to manage registrations')
     try:
         model.DBSession.add(p)

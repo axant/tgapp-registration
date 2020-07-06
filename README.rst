@@ -107,3 +107,12 @@ The templates used by registration and that can be replaced with
     * registration.templates.register
 
     * registration.templates.complete
+
+
+Alembic Migrations
+------------------
+
+tgapp-registration version **0.9.6** included the `extras` field in sqlalchemy model.
+to upgrade from earlier versions you need to run::
+
+  gearbox migrate-pluggable -c your_config.ini registration upgrade

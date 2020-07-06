@@ -7,7 +7,7 @@ import transaction, string, random, time, hashlib
 from sqlalchemy import Table, ForeignKey, Column
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.exc import IntegrityError
-from sqlalchemy.types import Unicode, Integer, DateTime
+from sqlalchemy.types import Unicode, Integer, DateTime, UnicodeText
 from sqlalchemy.orm import backref, relation, deferred
 
 from registration.model import DBSession
@@ -30,6 +30,7 @@ class Registration(DeclarativeBase):
     password = Column(Unicode(255), nullable=False)
     code = Column(Unicode(255), nullable=False)
     activated = Column(DateTime)
+    extras = Column(UnicodeText)
 
     user_id = Column(Integer, ForeignKey(primary_key(app_model.User)))
     user = relation(app_model.User, uselist=False, backref=backref('registration', uselist=False, cascade='all'))
@@ -77,6 +78,7 @@ class SqlaRegistration(IRegistration):
         new_reg.user_name = kw['user_name']
         new_reg.password = kw['password']
         new_reg.code = Registration.generate_code(kw['email_address'])
+        new_reg.extras = kw.get('extras')
         DBSession.add(new_reg)
         DBSession.flush()
         return new_reg
