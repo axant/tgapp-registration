@@ -10,7 +10,7 @@ from tgext.pluggable import plug, app_model
 from sqlalchemy import Integer, Column, Unicode, inspect
 from sqlalchemy.orm import sessionmaker, scoped_session
 from sqlalchemy.ext.declarative import declarative_base
-from zope.sqlalchemy import ZopeTransactionExtension
+from zope.sqlalchemy import register
 from sqlalchemy import event
 
 import ming
@@ -39,8 +39,8 @@ class FakeAppPackage(object):
 class FakeSQLAModel(object):
     def __init__(self):
         self.DeclarativeBase = declarative_base()
-        self.DBSession = scoped_session(sessionmaker(autoflush=True, autocommit=False,
-                                                     extension=ZopeTransactionExtension()))
+        self.DBSession = scoped_session(sessionmaker(autoflush=True, autocommit=False))
+        register(self.DBSession)
 
         class User(self.DeclarativeBase):
             __tablename__ = 'tg_user'
